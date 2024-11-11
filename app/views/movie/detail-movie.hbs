@@ -1,0 +1,254 @@
+<style>
+  .movie-header { background: url("https://image.tmdb.org/t/p/original{{movie.backdrop_path}}")
+  no-repeat center center; background-size: cover; color: #fff; padding: 50px 0;
+  text-align: center; border-radius: 10px; }
+</style>
+<div class="movie-detail">
+  <div class="movie-header">
+    <h1>{{movie.title}}</h1>
+    <p>{{movie.tagline}}</p>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <img
+          src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}"
+          alt="{{movie.title}} Poster"
+        />
+      </div>
+
+      <div class="col-md-8">
+        <div class="movie-info">
+          <h3>Thông tin phim</h3>
+          <p><strong>Ngày phát hành:</strong> {{movie.release_date}}</p>
+          <p><strong>Thời gian:</strong> {{movie.runtime}} phút</p>
+          <p><strong>Ngôn ngữ gốc:</strong> {{movie.original_language}}</p>
+          <p><strong>Thể loại:</strong>
+            {{#each movie.genres}}
+              <span class="badge">{{this.name}}</span>
+            {{/each}}
+          </p>
+          <p><strong>Ngân sách:</strong> {{movie.budget}} USD</p>
+          <p><strong>Doanh thu:</strong> {{movie.revenue}} USD</p>
+        </div>
+
+        <div class="movie-info mt-2">
+          <h3>Điểm đánh giá</h3>
+          <p><strong>Điểm trung bình:</strong> {{movie.vote_average}} / 10</p>
+          <p><strong>Lượt đánh giá:</strong> {{movie.vote_count}}</p>
+        </div>
+
+        <!-- Production Info -->
+        <div class="movie-info mt-2">
+          <h3>Thông tin sản xuất</h3>
+          <p><strong>Công ty sản xuất:</strong>
+            {{#each movie.production_companies}}
+              <span>{{this.name}}</span>{{#unless @last}}, {{/unless}}
+            {{/each}}
+          </p>
+          <p><strong>Quốc gia sản xuất:</strong>
+            {{#each movie.production_countries}}
+              <span>{{this.name}}</span>{{#unless @last}}, {{/unless}}
+            {{/each}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Section -->
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Tóm tắt</h3>
+        <p>{{movie.overview}}</p>
+      </div>
+    </div>
+
+    <!-- Video Trailer -->
+    {{#if movie.videos}}
+      <div class="row trailer">
+        <div class="col-md-12">
+          <h3>Trailer</h3>
+          {{#each movie.videos}}
+            {{#if (eq this.site "YouTube")}}
+              <iframe
+                src="https://www.youtube.com/embed/{{this.key}}"
+                allowfullscreen
+              ></iframe>
+            {{/if}}
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="nav nav-tabs" id="movieTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link active"
+              id="videos-tab"
+              data-bs-toggle="tab"
+              href="#videos"
+              role="tab"
+              aria-controls="videos"
+              aria-selected="true"
+            >Popular Videos ({{movie.videos.length}})</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="backdrops-tab"
+              data-bs-toggle="tab"
+              href="#backdrops"
+              role="tab"
+              aria-controls="backdrops"
+              aria-selected="false"
+            >Backdrops ({{movie.backdrops.length}})</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              id="posters-tab"
+              data-bs-toggle="tab"
+              href="#posters"
+              role="tab"
+              aria-controls="posters"
+              aria-selected="false"
+            >Posters ({{movie.posters.length}})</a>
+          </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="movieTabContent">
+          <!-- Popular Videos Section -->
+          <div
+            class="tab-pane fade show active"
+            id="videos"
+            role="tabpanel"
+            aria-labelledby="videos-tab"
+          >
+            <div class="video-thumbnails">
+              {{#each movie.videos}}
+                {{#if (eq this.site "YouTube")}}
+                  <div class="video-item">
+                    <iframe
+                      width="560"
+                      height="315"
+                      src="https://www.youtube.com/embed/{{this.key}}"
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    >
+                    </iframe>
+                  </div>
+                {{/if}}
+              {{/each}}
+            </div>
+          </div>
+
+          <!-- Backdrops Section -->
+          <div
+            class="tab-pane fade"
+            id="backdrops"
+            role="tabpanel"
+            aria-labelledby="backdrops-tab"
+          >
+            <div class="backdrop-thumbnails">
+              {{#each movie.backdrops}}
+                <div class="backdrop-item">
+                  <img
+                    src="https://image.tmdb.org/t/p/w500{{this.file_path}}"
+                    alt="Backdrop"
+                    class="img-fluid"
+                  />
+                </div>
+              {{/each}}
+            </div>
+          </div>
+
+          <!-- Posters Section -->
+          <div
+            class="tab-pane fade"
+            id="posters"
+            role="tabpanel"
+            aria-labelledby="posters-tab"
+          >
+            <div class="poster-thumbnails">
+              {{#each movie.posters}}
+                <div class="poster-item">
+                  <img
+                    src="https://image.tmdb.org/t/p/w500{{this.file_path}}"
+                    alt="Poster"
+                    class="img-fluid"
+                  />
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Diễn viên</h3>
+        <div class="cast-scroll">
+          {{#each movie.cast}}
+            <div class="cast-item">
+              <img
+                src="https://image.tmdb.org/t/p/w500{{this.profile_path}}"
+                alt="{{this.name}}"
+                class="rounded-circle"
+              />
+              <p>{{this.name}}</p>
+              <p><i>{{this.character}}</i></p>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Crew Section -->
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Đoàn làm phim</h3>
+        <div class="cast-scroll">
+          <!-- Đoàn làm phim -->
+          {{#each movie.crew}}
+            <div class="cast-item">
+              <img
+                src="https://image.tmdb.org/t/p/w500{{this.profile_path}}"
+                alt="{{this.name}}"
+                class="rounded-circle"
+              />
+              <p>{{this.name}}</p>
+              <p><i>{{this.job}}</i></p>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <!-- Reviews Section -->
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Đánh giá phim</h3>
+        {{#if movie.reviews.length}}
+          <div class="reviews-scroll">
+            {{#each movie.reviews}}
+              <div class="review-item">
+                <p><strong>{{this.author}}</strong>
+                  <span class="text-muted">({{this.created_at}})</span></p>
+                <p>{{this.content}}</p>
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <p>Chưa có đánh giá cho phim này.</p>
+        {{/if}}
+      </div>
+    </div>
+
+  </div>
+
+</div>

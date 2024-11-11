@@ -1,0 +1,49 @@
+<nav class="header-movie">
+  <div class="header">
+
+    <div class="logo">
+      <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="The Movie Database (TMDB)" width="154" height="20">
+    </div>
+    <div class="header-item">
+      <a href="" class="header-item header-item-link">Phim</a>
+    </div>
+    <div class="header-item">
+      <a href="" class="header-item header-item-link">TV Show</a>
+    </div>
+    <div class="genre tooltip-container header-item">
+      <span class="tooltip-trigger">Thể loại</span>
+      <ul class="tooltip-content" id="genre-list">
+        
+      </ul>
+    </div>
+    <div class="search">
+      <div class="search-icon">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <div>
+
+        <input class="search-input" placeholder="Tìm kiếm phim"/>
+      </div>
+    </div>
+  </div>
+
+</nav>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const response = await fetch('/genres');
+      const genres = await response.json();
+      const genreList = document.getElementById('genre-list');
+
+      genres.forEach(genre => {
+        const listItem = document.createElement('a');
+        listItem.classList.add('header-item-a'); 
+        listItem.textContent = genre.name;
+        genreList.appendChild(listItem);
+      });
+    } catch (error) {
+      console.error("Error fetching genres:", error);
+    }
+  });
+</script>
