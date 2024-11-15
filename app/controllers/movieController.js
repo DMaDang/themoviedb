@@ -1,46 +1,104 @@
 import { tmdbApi } from '../config/movieConfig.js';
 
 
-// export const getPopularMovies = async (req, res) => {
-//   try {
-//     const response = await tmdbApi.get('/movie/popular', { params: { page: 1 } });
-//     const popular = response.data.results;
-//     res.render('movie/popular-movie', { popular });
-//   } catch (error) { 
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 export const getPopularMovies = async (req, res) => {
-  const page = req.query.page || 1; // Lấy page từ query params, mặc định là 1
+  const page = req.query.page || 1;
   try {
     const response = await tmdbApi.get('/movie/popular', { params: { page } });
     const popular = response.data.results;
 
-    if (req.xhr) {  // Kiểm tra nếu là yêu cầu AJAX
-      res.json({ popular }); // Trả về JSON cho AJAX
+    if (req.xhr) {
+      res.json({ popular });
     } else {
-      res.render('movie/popular-movie', { popular });
+      res.render('movie/movies', {
+        movies: popular,
+        title: 'Phim phổ biến',
+        apiLink: "popular-movie",
+        apiData: "popular"
+      });
     }
-  } catch (error) { 
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getTopRatedMovies = async (req, res) => {
+  const page = req.query.page || 1;
+  try {
+    const response = await tmdbApi.get('/movie/top_rated', { params: { page } });
+    const topRated = response.data.results;
+
+    if (req.xhr) {
+      res.json({ topRated });
+    } else {
+      res.render('movie/movies', {
+        movies: topRated,
+        title: 'Phim được đánh cao',
+        apiLink: "popular-movie",
+        apiData: "popular"
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+export const getUpcomingMovies = async (req, res) => {
+  const page = req.query.page || 1;
+  try {
+    const response = await tmdbApi.get('/movie/upcoming', { params: { page } });
+    const upcoming = response.data.results;
+
+    if (req.xhr) {
+      res.json({ upcoming });
+    } else {
+      res.render('movie/movies', {
+        movies: upcoming,
+        title: 'Phim sắp ra mắt',
+        apiLink: "upcoming-movie",
+        apiData: "upcoming"
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getNowPlayingMovies = async (req, res) => {
+  const page = req.query.page || 1;
+  try {
+    const response = await tmdbApi.get('/movie/now_playing', { params: { page } });
+    const nowPlaying = response.data.results;
+
+    if (req.xhr) {
+      res.json({ nowPlaying });
+    } else {
+      res.render('movie/movies', {
+        movies: nowPlaying, 
+        title: 'Phim đang công chiếu', 
+        apiLink: "now-playing",
+        apiData: "nowPlaying"
+      });
+    }
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 export const getMovieDetails = async (req, res) => {
-  const movieId = req.params.id;  
+  const movieId = req.params.id;
   try {
     const movieResponse = await tmdbApi.get(`/movie/${movieId}`);
     const videoResponse = await tmdbApi.get(`/movie/${movieId}/videos`);
-    const creditsResponse = await tmdbApi.get(`/movie/${movieId}/credits`); 
+    const creditsResponse = await tmdbApi.get(`/movie/${movieId}/credits`);
     const reviewResponse = await tmdbApi.get(`/movie/${movieId}/reviews`);
 
     const movie = movieResponse.data;
     const videos = videoResponse.data.results;
-    const cast = creditsResponse.data.cast;  
-    const crew = creditsResponse.data.crew;  
+    const cast = creditsResponse.data.cast;
+    const crew = creditsResponse.data.crew;
     const reviews = reviewResponse.data.results;
-    const backdrops = movieResponse.data.backdrops;  
-    const posters = movieResponse.data.posters; 
+    const backdrops = movieResponse.data.backdrops;
+    const posters = movieResponse.data.posters;
 
     movie.videos = videos;
     movie.cast = cast;
@@ -77,10 +135,10 @@ export const searchMovies = async (req, res) => {
 };
 
 
-export const getMovieGenres =  async (req, res) => {
+export const getMovieGenres = async (req, res) => {
   try {
     const response = await tmdbApi.get('/genre/movie/list');
-    res.json(response.data.genres); 
+    res.json(response.data.genres);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

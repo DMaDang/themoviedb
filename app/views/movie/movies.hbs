@@ -1,0 +1,179 @@
+<div class="movie-detail">
+  <div class="container">
+    <h4>{{title}}</h4>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="movie-info">
+          <div class="search-section">
+            <span class="search-title">Sort</span>
+            <i class="fa fa-chevron-right icon-chevron"></i>
+          </div>
+          <div class="separate"></div>
+          <div class="detail-section">
+            <span class="detail-search">Sắp xếp theo</span>
+            <select id="search-by">
+              <option class="option-search" value="">Độ phổ biến giảm dần</option>
+              <option class="option-search" value="">Độ phổ biến tăng dần</option>
+              <option class="option-search" value="">Đánh giá giảm dần</option>
+              <option class="option-search" value="">Đánh giá tăng dần</option>
+              <option class="option-search" value="">Ngày ra mắt giảm dần</option>
+              <option class="option-search" value="">Ngày ra mắt tăng dần</option>
+              <option class="option-search" value="">Tiêu đề (A-Z)</option>
+              <option class="option-search" value="">Tiêu đề (Z-A)</option>
+            </select>
+          </div>
+        </div>
+        <div class="movie-info mt-3">
+          <div class="search-section">
+            <span class="search-title">Filter</span>
+            <i class="fa fa-chevron-right icon-chevon"></i>
+          </div>
+          <div class="separate"></div>
+          <div class="detail-section">
+            <span class="detail-search">Hiển thị</span>
+            <div class="radio-item mt-2">
+              <input class="option-radio" type="radio" id="html1" name="movie" value="all_movies" checked/>
+              <label class="option-label" for="html1">Mọi bộ phim</label>
+            </div>
+            <div class="radio-item">
+              <input class="option-radio" type="radio" id="html2" name="movie" value="unwatched_movies" />
+              <label class="option-label" for="html2">Phim tôi chưa xem</label>
+            </div>
+            <div class="radio-item">
+              <input class="option-radio" type="radio" id="html3" name="movie" value="watched_movies" />
+              <label class="option-label" for="html3">Phim tôi đã xem</label>
+            </div>
+          </div>
+          <div class="separate"></div>
+          <div class="detail-section">
+            <span class="detail-search">Ngày phát hành</span>
+            <form>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="searchAllReleases" checked />
+                <label class="form-check-label" for="searchAllReleases">Tìm kiếm các bộ phim?</label>
+              </div>
+              <div class="mt-1">
+                <div class="">
+                  <label class="from-to" for="dateFrom" class="">From</label>
+                  <input type="date" class="form-control" id="dateFrom" />
+                </div>
+                <div class="mt-2">
+                  <label class="from-to" for="dateTo" class="">To</label>
+                  <input type="date" class="form-control" id="dateTo" value="2025-05-15" />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="mt-3">
+          <button class="btn-search">Tìm kiếm</button>
+        </div>
+      </div>
+      <div class="col-md-9" style="margin-top: -30px;">
+        <div class="row movie-list">
+          {{#each movies}}
+          <div class="col-md-3">
+            <div class="card card-movie">
+              <div class="card-img-top">
+                <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.original_title}}"
+                  class="" />
+              </div>
+              <div class="card-body">
+                <div class="card-title movie-title" title="{{this.original_title}}">
+                  {{this.original_title}}
+                </div>
+                <div class="card-text movie-release">
+                  {{this.release_date}}
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        <div class="col-md-12">
+          <button class="btn-loadmore">Hiển thị thêm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let currentPage = 1;
+  const apiEndpoint = "{{apiLink}}"; 
+  const apiData = "{{apiData}}"; 
+  document.querySelector('.btn-loadmore').addEventListener('click', async () => {
+    currentPage++;
+    try {
+        const response = await fetch(`/movie/${apiEndpoint}?page=${currentPage}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        const data = await response.json();  
+        console.log(data); 
+
+        if (data[apiData] && data[apiData].length) {
+            const moviesContainer = document.querySelector('.movie-list');
+            data[apiData].forEach(movie => {  
+                const movieHTML = `
+                    <div class="col-md-3">
+                        <div class="card card-movie">
+                            <div class="card-img-top">
+                                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.original_title}" class="img-fluid">
+                            </div>
+                            <div class="card-body">
+                                <div class="card-title movie-title" title="${movie.original_title}">
+                                    ${movie.original_title}
+                                </div>
+                                <div class="card-text movie-release">
+                                    ${movie.release_date} 
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                moviesContainer.insertAdjacentHTML('beforeend', movieHTML);  
+            });
+
+            const loadMoreButton = document.querySelector('.btn-loadmore');
+            loadMoreButton.parentNode.appendChild(loadMoreButton);
+        } else {
+            document.querySelector('.btn-loadmore').style.display = 'none';  
+        }
+    } catch (error) {
+        console.error('Lỗi khi tải thêm phim:', error);
+    }
+});
+</script>
+
+
+<script>
+document.querySelectorAll('.search-section').forEach(section => {
+  section.addEventListener('click', () => {
+    const movieInfo = section.closest('.movie-info');
+    const detailSections = movieInfo.querySelectorAll('.detail-section'); 
+    const separates = movieInfo.querySelectorAll('.separate'); 
+
+    detailSections.forEach(detailSection => {
+      detailSection.classList.toggle('hidden');
+      detailSection.classList.toggle('show');
+    });
+    separates.forEach(separate => {
+      separate.classList.toggle('hidden');
+      separate.classList.toggle('show');
+    });
+
+    const chevronIcon = section.querySelector('.icon-chevron');
+    if (detailSections[0].classList.contains('hidden')) {
+      chevronIcon.classList.add('fa-chevron-down');
+      chevronIcon.classList.remove('fa-chevron-right');
+    } else {
+      chevronIcon.classList.add('fa-chevron-right');
+      chevronIcon.classList.remove('fa-chevron-down');
+    }
+  });
+});
+
+
+
+</script>

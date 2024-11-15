@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import MovieRoute from './app/routers/movieRoute.js';
 import UserRoute from './app/routers/userRoute.js';
+import TvRoute from './app/routers/tvRoute.js';
 
 dotenv.config();
 
@@ -15,10 +16,10 @@ const app = express();
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json()); 
 app.use(session({
-    secret: 'your-secret-key',  // Chìa khóa bí mật dùng để mã hóa session
-    resave: false,              // Không lưu lại session nếu không thay đổi
-    saveUninitialized: true,    // Lưu session ngay cả khi chưa có thay đổi
-    cookie: { secure: false }   // Thiết lập secure cookie, false cho môi trường phát triển
+    secret: process.env.SECRET_KEY_SESSION,  
+    resave: false,             
+    saveUninitialized: true,    
+    cookie: { secure: false }   
   }));
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -36,9 +37,9 @@ app.engine('.hbs', exphbs.engine({
     helpers: {
         ifEquals: function (a, b, options) {
           if (a === b) {
-            return options.fn(this); // Nếu a == b, render phần thân của block
+            return options.fn(this); 
           } else {
-            return options.inverse(this); // Nếu không, render phần ngược lại
+            return options.inverse(this);
           }
         },
         eq: function(a, b) {
@@ -49,8 +50,10 @@ app.engine('.hbs', exphbs.engine({
 
 app.set('view engine', '.hbs');
 
-app.use("/", MovieRoute);
+app.use("/movie", MovieRoute);
 app.use("/user", UserRoute);
+app.use("/tv", TvRoute);
+
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {

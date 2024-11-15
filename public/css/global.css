@@ -57,6 +57,9 @@ html body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    cursor: pointer;
+
 }
 
 .movie-info h3 {
@@ -98,10 +101,8 @@ html body {
     font-size: 14px;
 }
 
-/* Thanh cuộn khi không đủ chỗ */
 .cast-scroll::-webkit-scrollbar {
     height: 8px;
-    /* Chiều cao thanh cuộn */
 }
 
 .cast-scroll::-webkit-scrollbar-thumb {
@@ -147,33 +148,45 @@ html body {
 
 @media (max-width: 768px) {
     .review-item {
-        width: 200px; /* Thu nhỏ kích thước review trên màn hình nhỏ */
+        width: 200px;
+        /* Thu nhỏ kích thước review trên màn hình nhỏ */
     }
 }
 
 
 
-.card-img-top img{
+/* Popular movie */
+
+.card-img-top img {
     border-radius: 0;
 }
-.card-movie{
+
+.card-movie {
     border-radius: 4px;
     overflow: hidden;
-    min-height: 420px;
-    margin-bottom: 4px;
+    min-height: 390px;
+    margin-bottom: 15px;
     cursor: pointer;
 }
-.movie-title{
-    font-size: 16px;
+
+.movie-title {
+    font-size: 15px;
     font-weight: 700;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.movie-release{
+
+.movie-release {
     font-size: 14px;
     color: #666;
     padding: 0;
     margin-top: -4px;
 }
-.btn-loadmore{
+
+.btn-loadmore {
     background-color: #01b4e4;
     color: var(--light);
     font-size: 26px;
@@ -182,6 +195,159 @@ html body {
     outline: none;
     border: none;
     padding: 6px 4px;
-    margin-top: 20px;
+    margin-top: 10px;
     width: 100%;
+}
+
+
+.search-title {
+    font-weight: 700;
+
+}
+
+.detail-search {
+    font-weight: 400;
+    color: #555;
+}
+
+#search-by {
+    margin-top: 8px;
+    width: 100%;
+    background-color: #dee2e6;
+    border-radius: 4px;
+    padding: 6px 4px 8px 4px;
+    outline: none;
+    border: none;
+    font-size: 14px;
+}
+
+.option-search {
+    background-color: #ffffff;
+}
+
+.option-label {
+    font-weight: 500;
+    color: var(--dark);
+    cursor: pointer;
+    padding-left: 25px;
+    position: relative;
+}
+
+.option-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.option-label::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-left: 9px;
+    transform: translate(-50%, -50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+.option-radio {
+    display: none;
+}
+
+.option-radio:checked+.option-label::before {
+    background-color: #0fb7dc;
+    border-color: #0fb7dc;
+}
+
+.search-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--dark);
+}
+
+.detail-section {
+    margin-top: 35px;
+    display: none;
+    max-height: 0;
+    transition: max-height 2s ease-out;
+}
+
+.detail-section.show {
+    display: block;
+    max-height: 1000px;
+    animation: slideIn 5s ease-out;
+}
+
+.hidden {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        max-height: 0;
+    }
+
+    to {
+        max-height: 1000px;
+
+    }
+}
+
+.separate {
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 99;
+    width: 100%;
+    height: 1px;
+    margin-top: 20px;
+    position: absolute;
+    left: 0;
+    display: none;
+}
+
+.separate.show {
+    display: block;
+}
+
+.from-to {
+    color: #a4a4a4;
+    font-size: .8em;
+    font-weight: 600;
+}
+
+.form-check {
+    margin: 6px 0;
+}
+
+.form-check-label {
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.form-check-input:checked {
+    background-color: #0fb7dc;
+    border-color: #0fb7dc;
+}
+
+.btn-search {
+    color: var(--light);
+    padding: 6px 0;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #0fb7dc;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 20px;
 }
