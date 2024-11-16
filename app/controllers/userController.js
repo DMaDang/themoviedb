@@ -1,5 +1,48 @@
 import { tmdbApi } from "../config/movieConfig.js";
 
+
+export const getPopularPeople = async (req, res) => {
+  try {
+    const currentPage = parseInt(req.query.page) || 1; 
+    const response = await tmdbApi.get('/person/popular', {
+      params: { page: currentPage },
+    });
+    const popularPeople = response.data.results;
+    const totalPages = response.data.total_pages; 
+
+    const maxPagesToShow = 5; 
+    const half = Math.floor(maxPagesToShow / 2);
+    let paginationStart = Math.max(1, currentPage - half); 
+    let paginationEnd = Math.min(totalPages, paginationStart + maxPagesToShow - 1); 
+
+    if (paginationEnd - paginationStart < maxPagesToShow - 1) {
+      paginationStart = Math.max(1, paginationEnd - maxPagesToShow + 1);
+    }
+
+    res.render('person/popular-people', {
+      title: "Người nổi tiếng",
+      popularPeople,
+      currentPage,
+      totalPages,
+      paginationStart,
+      paginationEnd,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+export const getPersonDetails = async (req, res) => {
+  const { person_id } = req.params;
+  try {
+    const response = await tmdbApi.get(`/person/${person_id}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const createRequestToken = async (req, res) => {
   try {
     const response = await tmdbApi.get("/authentication/token/new");
@@ -12,7 +55,7 @@ export const createRequestToken = async (req, res) => {
     console.error(
       "Error:",
       error.response ? error.response.data : error.message
-    ); // In chi tiết lỗi
+    ); 
     res.status(500).json({ message: "Lỗi khi tạo request token" });
   }
 };
@@ -63,9 +106,8 @@ export const accountDetail = async (req, res) => {
   }
 
   try {
-    // Sử dụng sessionId thay vì accountId để truy vấn thông tin người dùng
     const response = await tmdbApi.get(`/account`, {
-      params: { session_id: sessionId }, // Thêm session_id vào tham số query
+      params: { session_id: sessionId }, 
     });
     res.render('user/account-detail', { account: response.data });
   } catch (error) {

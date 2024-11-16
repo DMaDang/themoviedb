@@ -27,31 +27,51 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set('views', path.join(__dirname, 'app/views')); 
 
 app.engine('.hbs', exphbs.engine({ 
-	extname: '.hbs', 
-	defaultLayout: 'main', 
-    layoutsDir: path.join(__dirname, 'app/views/layouts'), 
-    runtimeOptions: {
-        allowProtoPropertiesByDefault: true,
-        allowProtoMethodsByDefault: true
-    },
-    helpers: {
-        ifEquals: function (a, b, options) {
+  extname: '.hbs', 
+  defaultLayout: 'main', 
+  layoutsDir: path.join(__dirname, 'app/views/layouts'), 
+  runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true
+  },
+  helpers: {
+      ifEquals: function (a, b, options) {
           if (a === b) {
-            return options.fn(this); 
+              return options.fn(this); 
           } else {
-            return options.inverse(this);
+              return options.inverse(this);
           }
-        },
-        eq: function(a, b) {
+      },
+      eq: function(a, b) {
           return a === b;
-        }
+      },
+      gt: function(a, b) {
+          return a > b;
+      },
+      lt: function(a, b) {
+          return a < b;
+      },
+      subtract: function(a, b) {
+          return a - b;
+      },
+      add: function(a, b) {
+          return a + b;
+      },
+      range: function(start, end) {
+          const range = [];
+          for (let i = start; i <= end; i++) {
+              range.push(i);
+          }
+          return range;
       }
-}))
+  }
+}));
+
 
 app.set('view engine', '.hbs');
 
 app.use("/movie", MovieRoute);
-app.use("/user", UserRoute);
+app.use("/person", UserRoute);
 app.use("/tv", TvRoute);
 
 

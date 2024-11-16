@@ -58,3 +58,23 @@ export const getAiringTodayTVShows = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getOnTV = async (req, res) => {
+    const page = req.query.page || 1;
+    try {
+        const response = await tmdbApi.get("/tv/on_the_air", { params: { page } });
+        const onTV = response.data.results;
+        if (req.xhr) {
+            res.json({ onTV });
+        } else {
+            res.render("movie/tv", {
+                movies: onTV,
+                title: "Chương trình đang phát sóng",
+                apiLink: "on-tv",
+                apiData: "onTV"
+            });
+        }
+    } catch (err) {
+        res.status(400).json({ err: err });
+    }
+};

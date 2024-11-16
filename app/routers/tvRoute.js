@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/top-rated', tvRoute.getTopRatedTVShows)
 router.get('/popular', tvRoute.getPopularTVShows)
 router.get('/airing-today', tvRoute.getAiringTodayTVShows)
-// router.get('/popular', tvRoute.getPopularTVShows)
+router.get('/on-tv', tvRoute.getOnTV)
 
 
 

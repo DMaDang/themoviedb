@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="title-page">
+        <h3 class="title-h3">{{title}}</h3>
+    </div>
+    <div class="row">
+        {{#each popularPeople}}
+        <a href="/person/{{this.id}}" class="col-xl-3 col-md-3 col-sm-4 a-none-css">
+            <div class="card card-person">
+                <div class="card-img-top">
+                    <img src="https://image.tmdb.org/t/p/w500{{this.profile_path}}" alt="" class="">
+                </div>
+                <div class="card-body">
+                    <div class="card-title movie-title " title="{{name}}">
+                        {{this.name}}
+                    </div>
+                    <div class="card-text movie-release limit-line">
+                        {{#each this.known_for}}
+                        {{#if this.title}}
+                        <span>{{this.title}}</span>
+                        {{else if this.name}}
+                        <span title="{{this.name}} ">{{this.name}}</span>
+                        {{/if}}
+                        {{#unless @last}}, {{/unless}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {{/each}}
+
+        <div class="pagination">
+            {{#if (gt currentPage 1)}}
+            <a href="?page={{subtract currentPage 1}}" class="pagination-icon">
+                <i class="fa fa-chevron-left icon-chevron"></i>
+            </a>
+            {{/if}}
+
+            {{#each (range paginationStart paginationEnd)}}
+            <a href="?page={{this}}" class="pagination-page {{#if (eq this ../currentPage)}}active{{/if}}">
+                {{this}}
+            </a>
+            {{/each}}
+
+            {{#if (lt currentPage totalPages)}}
+            <a href="?page={{add currentPage 1}}" class="pagination-icon">
+                <i class="fa fa-chevron-right icon-chevron"></i>
+            </a>
+            {{/if}}
+        </div>
+
+
+    </div>
+</div>

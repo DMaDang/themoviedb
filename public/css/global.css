@@ -1,6 +1,7 @@
 :root {
     --light: #fff;
     --dark: #000;
+    --primary: #0fb7dc;
 }
 
 html body {
@@ -15,7 +16,7 @@ html body {
 
 .movie-detail {
     background-color: #f4f4f4;
-    padding: 30px;
+    /* padding: 30px; */
 }
 
 .movie-detail img {
@@ -164,7 +165,7 @@ html body {
 .card-movie {
     border-radius: 4px;
     overflow: hidden;
-    min-height: 390px;
+    height: 460px;
     margin-bottom: 15px;
     cursor: pointer;
 }
@@ -172,11 +173,6 @@ html body {
 .movie-title {
     font-size: 15px;
     font-weight: 700;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .movie-release {
@@ -196,6 +192,7 @@ html body {
     border: none;
     padding: 6px 4px;
     margin-top: 10px;
+    margin-bottom: 30px;
     width: 100%;
 }
 
@@ -266,8 +263,8 @@ html body {
 }
 
 .option-radio:checked+.option-label::before {
-    background-color: #0fb7dc;
-    border-color: #0fb7dc;
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
 
 .search-section {
@@ -336,8 +333,8 @@ html body {
 }
 
 .form-check-input:checked {
-    background-color: #0fb7dc;
-    border-color: #0fb7dc;
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
 
 .btn-search {
@@ -346,8 +343,89 @@ html body {
     width: 100%;
     border: none;
     outline: none;
-    background-color: #0fb7dc;
+    background-color: var(--primary);
     border-radius: 20px;
     font-weight: 700;
     font-size: 20px;
+}
+
+
+
+
+
+
+/* person */
+.a-none-css{
+    text-decoration: none;
+    color: var(--dark);
+}
+.limit-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.title-page {
+    padding-top: 25px;
+    padding-bottom: 15px;
+}
+
+.title-h3 {
+    font-weight: 700;
+}
+
+.card-person img {
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.card-person {
+    border-radius: 4px;
+    overflow: hidden;
+    height: 600px;
+    margin-bottom: 35px;
+    cursor: pointer;
+
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+.page {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.pagination-icon {
+    color: var(--dark);
+    font-size: 15px;
+    margin-top: 5px;
+    padding: 0 15px;
+    color: var(--dark);
+    cursor: pointer;
+}
+
+.pagination-icon:hover {
+    color: var(--primary);
+}
+
+.pagination-page {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.pagination-page.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
 }

@@ -12,7 +12,7 @@ router.get("/now-playing", movieController.getNowPlayingMovies);
 router.get("/:id", movieController.getMovieDetails);
 router.get("/trailer/:id", movieController.getMovieTrailer);
 router.get("/movie", movieController.searchMovies);
-router.get('/genres', movieController.getMovieGenres);
+router.get('/movie-genres/genres', movieController.getMovieGenres);
 
 
 export default router;

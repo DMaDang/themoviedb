@@ -1,6 +1,8 @@
 <div class="movie-detail">
   <div class="container">
-    <h4>{{title}}</h4>
+    <div class="title-page">
+      <h3 class="title-h3">{{title}}</h3>
+    </div>
     <div class="row">
       <div class="col-md-3">
         <div class="movie-info">
@@ -80,8 +82,7 @@
                   class="" />
               </div>
               <div class="card-body">
-                <div class="card-title movie-title" title="{{this.name}}">
-                  what the fucccc asd asd
+                <div class="card-title movie-title limit-line" title="{{this.name}}">
                   {{this.name}}
                 </div>
                 <div class="card-text movie-release">
@@ -101,24 +102,24 @@
 </div>
 <script>
   let currentPage = 1;
-  const apiEndpoint = "{{apiLink}}"; 
-  const apiData = "{{apiData}}"; 
+  const apiEndpoint = "{{apiLink}}";
+  const apiData = "{{apiData}}";
   document.querySelector('.btn-loadmore').addEventListener('click', async () => {
     currentPage++;
     try {
-        const response = await fetch(`/tv/${apiEndpoint}?page=${currentPage}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        });
+      const response = await fetch(`/tv/${apiEndpoint}?page=${currentPage}`, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
 
-        const data = await response.json();  
-        console.log(data); 
+      const data = await response.json();
+      console.log(data);
 
-        if (data[apiData] && data[apiData].length) {
-            const moviesContainer = document.querySelector('.movie-list');
-            data[apiData].forEach(movie => {  
-                const movieHTML = `
+      if (data[apiData] && data[apiData].length) {
+        const moviesContainer = document.querySelector('.movie-list');
+        data[apiData].forEach(movie => {
+          const movieHTML = `
                     <div class="col-md-3">
                         <div class="card card-movie">
                             <div class="card-img-top">
@@ -134,17 +135,17 @@
                             </div>
                         </div>
                     </div>`;
-                moviesContainer.insertAdjacentHTML('beforeend', movieHTML);  
-            });
+          moviesContainer.insertAdjacentHTML('beforeend', movieHTML);
+        });
 
-            const loadMoreButton = document.querySelector('.btn-loadmore');
-            loadMoreButton.parentNode.appendChild(loadMoreButton);
-        } else {
-            document.querySelector('.btn-loadmore').style.display = 'none';  
-        }
+        const loadMoreButton = document.querySelector('.btn-loadmore');
+        loadMoreButton.parentNode.appendChild(loadMoreButton);
+      } else {
+        document.querySelector('.btn-loadmore').style.display = 'none';
+      }
     } catch (error) {
-        console.error('Lỗi khi tải thêm phim:', error);
+      console.error('Lỗi khi tải thêm phim:', error);
     }
-});
+  });
 
 </script>
