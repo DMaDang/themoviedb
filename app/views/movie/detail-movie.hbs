@@ -129,6 +129,7 @@
             aria-labelledby="videos-tab"
           >
             <div class="video-thumbnails">
+              {{#if movie.videos.length}}
               {{#each movie.videos}}
                 {{#if (eq this.site "YouTube")}}
                   <div class="video-item">
@@ -145,6 +146,9 @@
                   </div>
                 {{/if}}
               {{/each}}
+              {{else}}
+                <p>Không có video nào phát hành</p>
+              {{/if}}
             </div>
           </div>
 
@@ -194,6 +198,7 @@
       <div class="col-md-12">
         <h3>Diễn viên</h3>
         <div class="cast-scroll">
+          {{#if movie.cast.length}}
           {{#each movie.cast}}
             <div class="cast-item">
               <img
@@ -205,6 +210,9 @@
               <p><i>{{this.character}}</i></p>
             </div>
           {{/each}}
+          {{else}}
+            <p>Chưa có thông tin về diễn viên</p>
+          {{/if}}
         </div>
       </div>
     </div>
@@ -215,6 +223,7 @@
         <h3>Đoàn làm phim</h3>
         <div class="cast-scroll">
           <!-- Đoàn làm phim -->
+        {{#if movie.crew.length}}
           {{#each movie.crew}}
             <div class="cast-item">
               <img
@@ -226,6 +235,9 @@
               <p><i>{{this.job}}</i></p>
             </div>
           {{/each}}
+          {{else}}
+            <p>Chưa có thông tin về đoàn làm phim</p>
+          {{/if}}
         </div>
       </div>
     </div>
@@ -252,3 +264,6 @@
   </div>
 
 </div>
+
+
+

@@ -1,0 +1,228 @@
+<div class="container">
+    <div class="row person-container">
+        <div class="col-xl-4 col-md-4 col-xl-4">
+            <img src="https://image.tmdb.org/t/p/w500{{person.profile_path}}" alt="{{person.name}}"
+                class="poster-person">
+            <div class="mt-4 info-container">
+                <div class="title-info">
+                    Personal Info
+                </div>
+                <div class="person-info">
+                    <span class="info-header">Known for</span>
+                    <span class="info-content">{{personDetails.knownFor}}</span>
+                </div>
+                <div class="person-info">
+                    <span class="info-header">Known credits</span>
+                    <span class="info-content">{{personDetails.knownCredits}}</span>
+                </div>
+                  <div class="person-info">
+                    <span class="info-header">Gender</span>
+                    <span class="info-content">{{personDetails.gender}}</span>
+                </div>
+                  <div class="person-info">
+                    <span class="info-header">Birthday</span>
+                    <span class="info-content">{{personDetails.birthday}}</span>
+                </div>
+                   <div class="person-info">
+                    <span class="info-header">Place of Birth</span>
+                    <span class="info-content">{{personDetails.placeOfBirth}}</span>
+                </div>
+                     <div class="person-info">
+                    <span class="info-header">Also known as</span>
+                    <span class="info-content">{{personDetails.alsoKnownAs}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8 col-md-8 col-sm-8">
+            <h2 class="name-person">
+                {{person.name}}
+            </h2>
+            <div class="bio-person mb-4 mt-4">
+                <div class="title-info">
+                    Tiểu sử
+                </div>
+                <div class="detail-bio">
+                    {{#if person.biography}}
+                    {{person.biography}}
+                    {{else}}
+                    Không có tiểu sử
+                    {{/if}}
+                </div>
+            </div>
+            <div class="title-info" style="display: fixed;">
+                Được biết đến
+            </div>
+            <div class="known-for cast-scroll mb-4" id="known-for-container">
+                <div class="film-joining-section">
+                    {{#each knownFor}}
+                    <div class="film-joining">
+                        <img src="https://image.tmdb.org/t/p/w500{{this.poster_path}}" alt="{{this.title}}"
+                            class="poster-film">
+                        <span class="name-film">{{this.title}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="acting-section">
+                <div class="header-acting">
+                    <div class="title-info">
+                        Đang hoạt động
+                    </div>
+                    <div class="filter-genres">
+                        <div>
+                            <div class="btn-filter" data-target="filter-acting">
+                                <span class="filter-acting">
+                                    Tất cả
+                                </span>
+                                <span>
+                                    <i class="fa-solid fa-caret-up filter-icon"></i>
+                                </span>
+                            </div>
+                            <div class="content-filter" id="filter-acting">
+                                <div class="content-filter-section" id="filter-all">
+                                    <span>Tất cả</span>
+                                </div>
+                                <div class="content-filter-section" id="filter-movie">
+                                    <span>Phim</span>
+                                    <span>{{movieCount}}</span>
+                                </div>
+                                <div class="content-filter-section" id="filter-tv">
+                                    <span>TV Shows</span>
+                                    <span>{{tvCount}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-left: 30px;">
+                            <div class="btn-filter" data-target="filter-department">
+                                <span class="filter-acting">
+                                    Department
+                                </span>
+                                <span>
+                                    <i class="fa-solid fa-caret-up filter-icon"></i>
+                                </span>
+                            </div>
+                            <div class="content-filter" id="filter-department">
+                                {{#each departmentCounts}}
+                                <div class="content-filter-section">
+                                    <span>{{@key}}</span>
+                                    <span>{{this}}</span>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="body-acting" data-media-type="{{this.media_type}}">
+                    {{#each knownFor}}
+                    <div class="body-acting-section">
+                        <div class="realease" data-media-type="{{this.media_type}}">
+                            {{#if this.release_date}}
+                            {{this.release_date}}
+                            {{else if this.first_air_date}}
+                            {{this.first_air_date}}
+                            {{else}}
+                            N/A
+                            {{/if}}
+                        </div>
+                        <div class="film-acting-media" data-media-type="{{this.media_type}}">
+                            <a href="/movie/{{movieId}}" class="a-none-css film-acting">
+                                <span class="name-film">
+                                    {{#if this.title}}
+                                    {{this.title}}
+                                    {{else if this.name}}
+                                    {{this.name}}
+                                    {{/if}}
+                                </span>
+                                <span class="episode-film">
+                                    {{#if this.character}}
+                                    as {{this.character}}
+                                    {{/if}}
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.btn-filter').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            const targetId = btn.getAttribute('data-target');
+            const contentFilter = document.getElementById(targetId);
+
+            document.querySelectorAll('.content-filter').forEach((filter) => {
+                if (filter !== contentFilter) {
+                    filter.classList.remove('show');
+                }
+            });
+
+            contentFilter.classList.toggle('show');
+        });
+    });
+    document.querySelectorAll('.content-filter').forEach((content) => {
+        content.addEventListener('mouseleave', () => {
+            content.classList.remove('show');
+        });
+    });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.btn-filter') && !e.target.closest('.content-filter')) {
+            document.querySelectorAll('.content-filter').forEach((filter) => {
+                filter.classList.remove('show');
+            });
+        }
+    });
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const allButton = document.getElementById("filter-all");
+        const movieButton = document.getElementById("filter-movie");
+        const tvButton = document.getElementById("filter-tv");
+
+        const knownForItems = document.querySelectorAll(".body-acting-section");
+        const filterActingText = document.querySelector('.filter-acting');
+
+        allButton.addEventListener("click", () => {
+            filterByType("all");
+            filterActingText.textContent = "Tất cả"; // Update the filter text to "Tất cả"
+        });
+
+        movieButton.addEventListener("click", () => {
+            filterByType("movie");
+            filterActingText.textContent = "Phim";
+        });
+
+        tvButton.addEventListener("click", () => {
+            filterByType("tv");
+            filterActingText.textContent = "TV Shows";
+        });
+
+        function filterByType(type) {
+            knownForItems.forEach(item => {
+                const mediaType = item.querySelector(".film-acting-media").getAttribute("data-media-type");
+                if (mediaType === type || type === "all") {
+                    item.style.visibility = "visible";
+                    item.style.position = "relative";
+                } else {
+                    item.style.visibility = "hidden";
+                    item.style.position = "absolute";
+                }
+            });
+        }
+
+        function showAllMovies() {
+            knownForItems.forEach(item => {
+                item.style.visibility = "visible";
+                item.style.position = "relative";
+            });
+        }
+    });
+
+</script>

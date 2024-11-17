@@ -1,0 +1,247 @@
+/* Popular movie */
+
+.card-img-top img {
+    border-radius: 0;
+}
+
+.card-movie {
+    border-radius: 4px;
+    overflow: hidden;
+    height: 460px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.movie-title {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.movie-release {
+    font-size: 14px;
+    color: #666;
+    padding: 0;
+    margin-top: -4px;
+}
+
+.btn-loadmore {
+    background-color: #01b4e4;
+    color: var(--light);
+    font-size: 26px;
+    font-weight: 700;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    padding: 6px 4px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+
+.search-title {
+    font-weight: 700;
+
+}
+
+.detail-search {
+    font-weight: 400;
+    color: #555;
+}
+
+#search-by {
+    margin-top: 8px;
+    width: 100%;
+    background-color: #dee2e6;
+    border-radius: 4px;
+    padding: 6px 4px 8px 4px;
+    outline: none;
+    border: none;
+    font-size: 14px;
+}
+
+.option-search {
+    background-color: #ffffff;
+}
+
+.option-label {
+    font-weight: 500;
+    color: var(--dark);
+    cursor: pointer;
+    padding-left: 25px;
+    position: relative;
+}
+
+.option-label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.option-label::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-left: 9px;
+    transform: translate(-50%, -50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+.option-radio {
+    display: none;
+}
+
+.option-radio:checked+.option-label::before {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.search-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--dark);
+}
+
+.detail-section {
+    margin-top: 35px;
+    display: none;
+    max-height: 0;
+    transition: max-height 2s ease-out;
+}
+
+.detail-section.show {
+    display: block;
+    max-height: 1000px;
+    animation: slideIn 5s ease-out;
+}
+
+.hidden {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        max-height: 0;
+    }
+
+    to {
+        max-height: 1000px;
+
+    }
+}
+
+
+.from-to {
+    color: #a4a4a4;
+    font-size: .8em;
+    font-weight: 600;
+}
+
+.form-check {
+    margin: 6px 0;
+}
+
+.form-check-label {
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-search {
+    color: var(--light);
+    padding: 6px 0;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: var(--primary);
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+
+
+
+
+
+
+.title-page {
+    padding-top: 25px;
+    padding-bottom: 15px;
+}
+
+.title-h3 {
+    font-weight: 700;
+}
+
+.card-person img {
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.card-person {
+    border-radius: 4px;
+    overflow: hidden;
+    height: 600px;
+    margin-bottom: 35px;
+    cursor: pointer;
+
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+.page {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.pagination-icon {
+    color: var(--dark);
+    font-size: 15px;
+    margin-top: 5px;
+    padding: 0 15px;
+    color: var(--dark);
+    cursor: pointer;
+}
+
+.pagination-icon:hover {
+    color: var(--primary);
+}
+
+.pagination-page {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.pagination-page.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
