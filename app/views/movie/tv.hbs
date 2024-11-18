@@ -75,11 +75,11 @@
       <div class="col-md-9" style="margin-top: -30px;">
         <div class="row movie-list">
           {{#each movies}}
-          <div class="col-md-3">
+          <a href="/tv/{{this.id}}" class="col-md-3 a-none-css">
             <div class="card card-movie">
               <div class="card-img-top">
                 <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.original_title}}"
-                  class="" />
+                  class="poster" />
               </div>
               <div class="card-body">
                 <div class="card-title movie-title limit-line" title="{{this.name}}">
@@ -90,7 +90,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </a>
           {{/each}}
         </div>
         <div class="col-md-12">
@@ -120,13 +120,13 @@
         const moviesContainer = document.querySelector('.movie-list');
         data[apiData].forEach(movie => {
           const movieHTML = `
-                    <div class="col-md-3">
+                    <a href="/tv/${movie.id}" class="col-md-3 a-none-css">
                         <div class="card card-movie">
                             <div class="card-img-top">
-                                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.name}" class="img-fluid">
+                                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.name}" class="poster">
                             </div>
                             <div class="card-body">
-                                <div class="card-title movie-title" title="${movie.name}">
+                                <div class="card-title movie-title limit-line" title="${movie.name}">
                                     ${movie.name}
                                 </div>
                                 <div class="card-text movie-release">
@@ -134,7 +134,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>`;
+                    </a>`;
           moviesContainer.insertAdjacentHTML('beforeend', movieHTML);
         });
 

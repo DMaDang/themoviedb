@@ -1,0 +1,10 @@
+.background-index {
+    background-image: url('https://media.themoviedb.org/t/p/w1920_and_h600_multi_faces_filter%28duotone%2C00192f%2C00baff%29/5N8LOeRzt7LcZIhPbNVaCsVOPdT.jpg') !important;
+    min-height: 370px;
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center; 
+    width: 100%;
+    top: 0;
+    left: 0;
+}

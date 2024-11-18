@@ -6,14 +6,26 @@
           src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
           alt="The Movie Database (TMDB)" width="154" height="20">
       </div>
-      <div class="header-item">
-        <a href="" class="header-item header-item-link">Phim</a>
+      <div class="header-item header-item-movie">
+        <div href="" class="header-item header-item-link">Phim</div>
+        <div class="bg-light shadow movie-item">
+          <a href="/movie/popular-movie" class="movie-item-a">Phổ biến</a>
+          <a href="/movie/now-playing" class="movie-item-a">Đang phát sóng</a>
+          <a href="/movie/upcoming-movie" class="movie-item-a">Sắp lên sóng</a>
+          <a href="/movie/top-rated" class="movie-item-a">Đánh giá cao</a>
+        </div>
+      </div>
+      <div class="header-item header-item-tvshow">
+        <div class="header-item header-item-link">TV Show</div>
+        <div class="bg-light shadow tvshow-item">
+          <a href="/tv/popular" class="movie-item-a">Phổ biến</a>
+          <a href="/tv/airing-today" class="movie-item-a">Phát sóng hôm nay</a>
+          <a href="/tv/on-tv" class="movie-item-a">Chương trình đang phát sóng</a>
+          <a href="/tv/top-rated" class="movie-item-a">Đánh giá cao</a>
+        </div>
       </div>
       <div class="header-item">
-        <a href="" class="header-item header-item-link">TV Show</a>
-      </div>
-        <div class="header-item">
-        <a href="" class="header-item header-item-link">Người nổi tiếng</a>
+        <a href="/person/popular-people" class="header-item header-item-link">Người nổi tiếng</a>
       </div>
       <div class="genre tooltip-container header-item">
         <span class="tooltip-trigger">Thể loại</span>
@@ -33,23 +45,23 @@
 
 </nav>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      try {
-        const response = await fetch('/movie/movie-genres/genres');
-        const genres = await response.json();
-        console.log("Genres:", genres);
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const response = await fetch('/movie/movie-genres/genres');
+      const genres = await response.json();
+      console.log("Genres:", genres);
 
-        const genreList = document.getElementById('genre-list');
+      const genreList = document.getElementById('genre-list');
 
-        genres.forEach(genre => {
-          const listItem = document.createElement('a');
-          listItem.classList.add('header-item-a');
-          listItem.textContent = genre.name;
-          genreList.appendChild(listItem);
-        });
-      } catch (error) {
-        console.error("Error fetching genres:", error);
-      }
-    });
-  </script>
+      genres.forEach(genre => {
+        const listItem = document.createElement('a');
+        listItem.classList.add('header-item-a');
+        listItem.textContent = genre.name;
+        genreList.appendChild(listItem);
+      });
+    } catch (error) {
+      console.error("Error fetching genres:", error);
+    }
+  });
+</script>

@@ -1,35 +1,40 @@
-.header-movie{
+.header-movie {
     height: 100px;
     display: flex;
     justify-content: space-between;
     background-color: var(--light);
     box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
-    top: 0;  
+    top: 0;
     left: 0;
     z-index: 10;
     position: fixed;
     width: 100%;
 }
-.header{
+
+.header {
     display: flex;
     width: 1216px;
     padding-left: 80px;
     align-items: center;
     justify-content: space-between;
 }
-.logo{
+
+.logo {
     cursor: pointer;
 
 }
-.header-item-a{
+
+.header-item-a {
     text-decoration: none;
     color: #555;
     font-size: 14px;
 }
-.header-item-a:hover{
+
+.header-item-a:hover {
     opacity: 0.8;
 }
-.search{
+
+.search {
     width: 200px;
     display: flex;
     align-items: center;
@@ -39,39 +44,95 @@
     color: #848687;
     border-radius: 8px;
 }
-.logo-title{
+
+.logo-title {
     width: 800px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 40px;
 }
-.search-icon{
+
+.search-icon {
     padding-left: 8px;
     cursor: pointer;
     font-weight: 800;
 
 }
-.search-input{
+
+.search-input {
     width: 100%;
     padding: 0 8px;
     background-color: transparent;
     border: none;
     outline: none;
 }
-.search-input:focus::placeholder{
+
+.search-input:focus::placeholder {
     color: var(--dark);
 }
 
-.search:focus-within{
+.search:focus-within {
     border-color: var(--dark);
 }
 
-.header-item{
+.header-item {
     cursor: pointer;
     font-size: 20px;
     font-weight: 500;
+    position: relative;
 }
-.header-item:hover{
+.tvshow-item, 
+.movie-item{
+    display: none;
+    width: 300px;
+    border-radius: 8px;
+    position: absolute;
+}
+.movie-item-a{
+    padding: 8px 14px;
+    color: var(--dark);
+    font-size: 18px;
+    display: block;
+    text-decoration: none;
+    
+}
+.movie-item-a:hover{
+    background-color: #dee2e6;
+}
+.header-item-movie:hover .movie-item{
+    display: block;
+}
+.header-item-tvshow:hover .tvshow-item{
+    display: block;
+}
+.header-item:hover {
     color: #0fb7dc;
+}
+
+
+
+
+
+
+/* -----------------------footer------------------------- */
+.footer-container {
+    padding: 26px 0 30px 0;
+    background-color: #031e35;
+    color: var(--light);
+}
+.img-col{
+    margin-top: 30px;
+    padding-right: 60px;
+    cursor: pointer;
+}
+.footer-link {
+    text-decoration: none;
+    margin: 8px 0;
+    color: var(--light);
+    font-size: 20px;
+}
+
+.footer-heading {
+    font-weight: bold;
 }

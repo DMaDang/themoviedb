@@ -74,11 +74,11 @@
       <div class="col-md-9" style="margin-top: -30px;">
         <div class="row movie-list">
           {{#each movies}}
-          <div class="col-md-3">
+          <a href="/movie/{{this.id}}" class="col-md-3 a-none-css">
             <div class="card card-movie">
               <div class="card-img-top">
                 <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.original_title}}"
-                  class="" />
+                  class="poster" />
               </div>
               <div class="card-body">
                 <div class="card-title movie-title" title="{{this.original_title}}">
@@ -89,7 +89,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </a>
           {{/each}}
         </div>
         <div class="col-md-12">
@@ -103,6 +103,7 @@
   let currentPage = 1;
   const apiEndpoint = "{{apiLink}}";
   const apiData = "{{apiData}}";
+  const apiId = "{{apiId}}";
   document.querySelector('.btn-loadmore').addEventListener('click', async () => {
     currentPage++;
     try {
@@ -119,13 +120,13 @@
         const moviesContainer = document.querySelector('.movie-list');
         data[apiData].forEach(movie => {
           const movieHTML = `
-                    <div class="col-md-3">
+                    <a href="/movie/${movie.id}" class="col-md-3 a-none-css">
                         <div class="card card-movie">
                             <div class="card-img-top">
-                                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.original_title}" class="img-fluid">
+                                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.original_title}" class="poster">
                             </div>
                             <div class="card-body">
-                                <div class="card-title movie-title" title="${movie.original_title}">
+                                <div class="card-title movie-title limit-line" title="${movie.original_title}">
                                     ${movie.original_title}
                                 </div>
                                 <div class="card-text movie-release">
@@ -133,7 +134,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>`;
+                    </a>`;
           moviesContainer.insertAdjacentHTML('beforeend', movieHTML);
         });
 

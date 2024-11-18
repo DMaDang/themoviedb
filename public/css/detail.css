@@ -234,7 +234,9 @@
     z-index: 999;
     cursor: pointer;
     display: none;
+    animation: grow 0.1s ease forwards;
 }
+
 .content-filter.show {
     display: block;
 }

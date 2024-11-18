@@ -1,9 +1,8 @@
 /* Popular movie */
 
-.card-img-top img {
-    border-radius: 0;
+.card-img-top .poster {
+    border-radius: 0 ;
 }
-
 .card-movie {
     border-radius: 4px;
     overflow: hidden;
@@ -131,17 +130,6 @@
 
 .hidden {
     display: block;
-}
-
-@keyframes slideIn {
-    from {
-        max-height: 0;
-    }
-
-    to {
-        max-height: 1000px;
-
-    }
 }
 
 

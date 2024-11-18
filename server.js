@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import MovieRoute from './app/routers/movieRoute.js';
 import UserRoute from './app/routers/userRoute.js';
 import TvRoute from './app/routers/tvRoute.js';
+import HomepageRoute from './app/routers/homepageRoute.js';
 
 dotenv.config();
 
@@ -73,6 +74,7 @@ app.set('view engine', '.hbs');
 app.use("/movie", MovieRoute);
 app.use("/person", UserRoute);
 app.use("/tv", TvRoute);
+app.use("/", HomepageRoute);
 
 
 const PORT = process.env.PORT ;
