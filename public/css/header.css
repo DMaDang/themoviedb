@@ -124,7 +124,11 @@
 .img-col{
     margin-top: 30px;
     padding-right: 60px;
+    padding-left: 30px;
     cursor: pointer;
+}
+.img-fluid{
+    width: 200px;
 }
 .footer-link {
     text-decoration: none;
@@ -135,4 +139,8 @@
 
 .footer-heading {
     font-weight: bold;
+    font-size: 1.4em;
+}
+.footer-element{
+    padding-left: 30px
 }

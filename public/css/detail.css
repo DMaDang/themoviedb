@@ -86,12 +86,13 @@
 }
 
 .cast-scroll::-webkit-scrollbar-thumb {
-    background-color: #999;
+    background-color: #DBDBDB;
     border-radius: 10px;
+    width: 80px;
 }
 
 .cast-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: #666;
+    background-color: #999;
     cursor: pointer;
 }
 
@@ -293,6 +294,9 @@
 @media (max-width: 768px) {
     .review-item {
         width: 200px;
+    }
+    .input-query {
+        width: 30vw;
     }
 }
 

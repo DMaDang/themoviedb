@@ -1,3 +1,103 @@
 <div class="container-fluid background-index">
-    <h1 class="">hihih  h</h1>
+    <span class="title-welcome">Welcome.</span>
+    <div class="title-index" bis_skin_checked="1">
+        <h3>Millions of movies, TV shows and people to discover. Explore now.</h3>
+    </div>
+    <div class="search-index" bis_skin_checked="1">
+        <form id="inner_search_form" action="/search" method="get" accept-charset="utf-8">
+            <input type="text" class="input-query" name="query" autocorrect="off" autofill="off" autocomplete="off"
+                spellcheck="false" placeholder="Search for a movie, tv show, person......">
+            <button class="search-btn">Search</button>
+        </form>
+    </div>
 </div>
+<div class="container-fluid cast-scroll">
+    <div class="container">
+        <div class="row">
+            <div class="trending container-film">
+                <div class="header-container-film">
+                    <div class="trending-header-title">Trending</div>
+                    <div class="today-thisweek">
+                          <div class="toggle-wrapper">
+            <div class="toggle-slider" id="slider"></div>
+            <div class="toggle-button active" id="today-btn">Today</div>
+            <div class="toggle-button" id="thisweek-btn">This Week</div>
+        </div>
+                    </div>
+                </div>
+                <div class="content-container-film">
+                    <div class="trending-list list-film col-sm-4 col-md-3 col-3 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/nmJFOXz9lXlC7dnIBFjUVEazADX.jpg" alt=""
+                            class="poster-index">
+                        <div class="movie-title name-movie-index limit-line">Hành Tinh Cát: Lời Tiên từ đại dương
+                        </div>
+                        <div class="movie-release release-index">Nov 17, 2024</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid background-trailer cast-scroll">
+    <div class="container">
+        <div class="row">
+            <div class="lastest-trailers container-film text-white">
+                <div class="header-container-film ">
+                    <div class="trending-header-title">Lastest trailers</div>
+                    <div class="popular-theater"></div>
+                </div>
+                <div class="content-container-film">
+                    <div class="trending-list list-film col-sm-4 col-md-3 col-3 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/nmJFOXz9lXlC7dnIBFjUVEazADX.jpg" alt=""
+                            class="poster-index">
+                        <div class="movie-title name-movie-index limit-line">Hành Tinh Cát: Lời Tiên từ đại dương biển
+                            khơi
+                        </div>
+                        <div class="movie-release release-index text-white">Nov 17, 2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid cast-scroll">
+    <div class="container">
+        <div class="row">
+            <div class="what-popular container-film">
+                <div class="header-container-film ">
+                    <div class="trending-header-title">What's popular</div>
+                </div>
+                <div class="content-container-film">
+                    <div class="trending-list list-film col-sm-4 col-md-3 col-3 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/nmJFOXz9lXlC7dnIBFjUVEazADX.jpg" alt=""
+                            class="poster-index">
+                        <div class="movie-title name-movie-index limit-line">Hành Tinh Cát: Lời Tiên từ đại dương biển
+                            khơi
+                        </div>
+                        <div class="movie-release release-index">Nov 17, 2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ <script>
+        const slider = document.getElementById('slider');
+        const todayBtn = document.getElementById('today-btn');
+        const thisWeekBtn = document.getElementById('thisweek-btn');
+
+        todayBtn.addEventListener('click', function () {
+            slider.style.left = "0"; // Trượt về trái
+            todayBtn.classList.add('active');
+            thisWeekBtn.classList.remove('active');
+        });
+
+        thisWeekBtn.addEventListener('click', function () {
+            slider.style.left = "50%"; // Trượt về phải
+            thisWeekBtn.classList.add('active');
+            todayBtn.classList.remove('active');
+        });
+    </script>

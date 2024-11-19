@@ -4,7 +4,169 @@
     background-size: cover; 
     background-repeat: no-repeat;
     background-position: center; 
+    /* width: 100%; */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+.background-index .title-welcome {
+    font-weight: 700;
+    color: var(--light);
+    margin-left: 60px;
+    font-size: 70px;
+}
+
+.title-index{
+    color: var(--light);
+    margin-left: 60px;
+    font-weight: 500;
+    font-size: 60px;
+    padding: 0;
+}
+
+.search-index{
+    margin-top: 20px;
+    margin-left: 50px;
+    position: relative;
+}
+
+.input-query{
+    width: 88vw;
+    border-top-left-radius: 800px;
+    border-bottom-left-radius: 800px;
+    padding: 10px 0 10px 30px;
+
+}
+
+.search-btn {
+    background: linear-gradient(to right, rgba(30,213,169,1) 0%, rgba(1, 180, 228, 1) 100%);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    border-top-right-radius: 800px;
+    border-bottom-right-radius: 800px;
+    padding: 10px 15px;
+    margin-left: -55px;
+}
+
+.input-query,
+.search-btn {
+    font-size: 15px;
+    outline: none;
+    border: none;
+}
+
+
+
+/* ----------------------trending----------------------------- */
+
+
+.container-film{
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+}
+.header-container-film{
+    font-size: 1.6em;
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    margin: 25px 0 10px 0;
+}
+.list-film{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 20px;
+}
+.content-container-film{
+    display: flex;
+    flex-direction: row;
+}
+.poster-index{
     width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+
+}
+.name-movie-index{
+    margin: 20px 10px 0 10px;
+}
+.name-movie-index:hover{
+    color: var(--primary);
+    cursor: pointer;
+}
+.release-index{
+    margin: 0 10px 0 10px;
+}
+.container-film{
+    padding-bottom: 30px;
+}
+.background-trailer{
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url('https://media.themoviedb.org/t/p/w1920_and_h427_multi_faces/lBoHzOgft2QfpjkVVvZCqeM4ttT.jpg');
+    min-height: 370px;
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center; 
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+
+.toggle-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 220px; /* Chiều rộng toggle */
+    height: 30px; /* Chiều cao toggle */
+    background: var(--light);
+    border: 1px solid var(--primary);
+    border-radius: 30px;
+    overflow: hidden;
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+.toggle-slider {
+    position: absolute;
     top: 0;
     left: 0;
+    width: 50%; 
+    height: 100%;
+    background: linear-gradient(to right, rgba(30,213,169,1), rgba(1,180,228,1)); 
+    border-radius: 30px;
+    transition: 0.3s ease; 
 }
+
+.toggle-button {
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    line-height: 30px; 
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--dark);
+    cursor: pointer;
+}
+
+.toggle-button:first-child {
+    left: 0;
+}
+
+.toggle-button:last-child {
+    right: 0;
+}
+
+.toggle-wrapper .active {
+    color: var(--light)
+}
+@media (max-width: 768px) {
+    .input-query {
+        width: 73vw;
+    }
+}
+
