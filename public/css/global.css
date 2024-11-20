@@ -32,6 +32,7 @@ html body {
 .a-none-css {
     text-decoration: none;
     color: var(--dark);
+    display: block;  
 }
 
 .limit-line {

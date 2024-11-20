@@ -1,103 +1,160 @@
 <div class="container-fluid background-index">
     <span class="title-welcome">Welcome.</span>
-    <div class="title-index" bis_skin_checked="1">
+    <div class="title-index">
         <h3>Millions of movies, TV shows and people to discover. Explore now.</h3>
     </div>
-    <div class="search-index" bis_skin_checked="1">
-        <form id="inner_search_form" action="/search" method="get" accept-charset="utf-8">
-            <input type="text" class="input-query" name="query" autocorrect="off" autofill="off" autocomplete="off"
-                spellcheck="false" placeholder="Search for a movie, tv show, person......">
+    <div class="search-index">
+        <form id="inner_search_form" action="/search/tv" method="get" accept-charset="utf-8">
+            <input type="text" class="input-query" name="query" placeholder="Search for a movie, tv show, person......">
             <button class="search-btn">Search</button>
         </form>
     </div>
 </div>
-<div class="container-fluid cast-scroll">
-    <div class="container">
-        <div class="row">
-            <div class="trending container-film">
-                <div class="header-container-film">
-                    <div class="trending-header-title">Trending</div>
-                    <div class="today-thisweek">
-                          <div class="toggle-wrapper">
-            <div class="toggle-slider" id="slider"></div>
-            <div class="toggle-button active" id="today-btn">Today</div>
-            <div class="toggle-button" id="thisweek-btn">This Week</div>
-        </div>
-                    </div>
-                </div>
-                <div class="content-container-film">
-                    <div class="trending-list list-film col-sm-4 col-md-3 col-3 col-xl-2">
-                        <img src="https://image.tmdb.org/t/p/w500/nmJFOXz9lXlC7dnIBFjUVEazADX.jpg" alt=""
-                            class="poster-index">
-                        <div class="movie-title name-movie-index limit-line">Hành Tinh Cát: Lời Tiên từ đại dương
-                        </div>
-                        <div class="movie-release release-index">Nov 17, 2024</div>
-                    </div>
 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid background-trailer cast-scroll">
-    <div class="container">
-        <div class="row">
-            <div class="lastest-trailers container-film text-white">
-                <div class="header-container-film ">
-                    <div class="trending-header-title">Lastest trailers</div>
-                    <div class="popular-theater"></div>
-                </div>
-                <div class="content-container-film">
-                    <div class="trending-list list-film col-sm-4 col-md-3 col-3 col-xl-2">
-                        <img src="https://image.tmdb.org/t/p/w500/nmJFOXz9lXlC7dnIBFjUVEazADX.jpg" alt=""
-                            class="poster-index">
-                        <div class="movie-title name-movie-index limit-line">Hành Tinh Cát: Lời Tiên từ đại dương biển
-                            khơi
-                        </div>
-                        <div class="movie-release release-index text-white">Nov 17, 2024</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid cast-scroll">
-    <div class="container">
-        <div class="row">
-            <div class="what-popular container-film">
-                <div class="header-container-film ">
-                    <div class="trending-header-title">What's popular</div>
-                </div>
-                <div class="content-container-film">
-                    <div class="trending-list list-film col-sm-4 col-md-3 col-3 col-xl-2">
-                        <img src="https://image.tmdb.org/t/p/w500/nmJFOXz9lXlC7dnIBFjUVEazADX.jpg" alt=""
-                            class="poster-index">
-                        <div class="movie-title name-movie-index limit-line">Hành Tinh Cát: Lời Tiên từ đại dương biển
-                            khơi
-                        </div>
-                        <div class="movie-release release-index">Nov 17, 2024</div>
-                    </div>
+<div class="container section-movie cast-scroll">
+    <div class="row">
+        <div class="header-container-film col-12">
+            <div class="trending-header-title">Trending</div>
+            <div class="today-thisweek">
+                <div class="toggle-wrapper">
+                    <div class="toggle-slider" id="trending-slider"></div>
+                    <div class="toggle-button active" id="today-btn">Today</div>
+                    <div class="toggle-button" id="thisweek-btn">This Week</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="container section-movie cast-scroll">
+    <div class="row">
+        <div class="trending container-film">
+            <div class="content-container-film" id="trending-content">
 
- <script>
-        const slider = document.getElementById('slider');
-        const todayBtn = document.getElementById('today-btn');
-        const thisWeekBtn = document.getElementById('thisweek-btn');
+            </div>
+        </div>
+    </div>
+</div>
 
-        todayBtn.addEventListener('click', function () {
-            slider.style.left = "0"; // Trượt về trái
-            todayBtn.classList.add('active');
-            thisWeekBtn.classList.remove('active');
-        });
+<div class="background-trailer container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="header-container-film col-12 mb-4 pt-4">
+                <div class="trending-header-title text-white">Latest Trailers</div>
+                <div class="today-thisweek">
+                    <div class="toggle-wrapper">
+                        <div class="toggle-slider" id="trailers-slider"></div>
+                        <div class="toggle-button active" id="popular-btn-trending">Popular</div>
+                        <div class="toggle-button" id="theater-btn-trending">In Theaters</div>
+                    </div>
+                </div>
+            </div>
+            <div class="lastest-trailers container-film text-white cast-scroll">
+                <div class="content-container-film" id="trailers-content">
 
-        thisWeekBtn.addEventListener('click', function () {
-            slider.style.left = "50%"; // Trượt về phải
-            thisWeekBtn.classList.add('active');
-            todayBtn.classList.remove('active');
-        });
-    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container section-movie cast-scroll">
+    <div class="row">
+        <div class="header-container-film col-12">
+            <div class="trending-header-title">What's Popular</div>
+        </div>
+    </div>
+</div>
+
+<div class="container section-movie cast-scroll">
+    <div class="row">
+        <div class="trending container-film">
+            <div class="content-container-film">
+                {{#each popularMovies}}
+                <div class="trending-list list-film col-sm-1 col-md-1 col-1">
+                    <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.title}}"
+                        class="poster-index">
+                    <div class="movie-title name-movie-index limit-line">{{this.title}}</div>
+                    <div class="movie-release release-index">Release Date: {{this.release_date}}</div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    const todayBtn = document.getElementById('today-btn');
+    const thisWeekBtn = document.getElementById('thisweek-btn');
+    const trendingSlider = document.getElementById('trending-slider');
+    const trailersSlider = document.getElementById('trailers-slider');
+    const trendingContent = document.getElementById('trending-content');
+    const trailersContent = document.getElementById('trailers-content');
+    const popularBtnTrending = document.getElementById('popular-btn-trending');
+    const theaterBtnTrending = document.getElementById('theater-btn-trending');
+
+    function fetchTrendingMovies(timeframe) {
+        fetch(`/trending/${timeframe}`)
+            .then(response => response.json())
+            .then(data => {
+                trendingContent.innerHTML = data.movies.map(movie => `
+                <div class="trending-list list-film col-sm-1 col-md-1 col-1">
+                    <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.title}" class="poster-index">
+                    <div class="movie-title name-movie-index limit-line">${movie.title}</div>
+                    <div class="movie-release release-index">Release Date: ${movie.release_date}</div>
+                </div>
+            `).join('');
+            })
+            .catch(error => console.error('Error fetching trending movies:', error));
+    }
+
+    function fetchTrailers(type) {
+        fetch(`/trailers?type=${type}`)
+            .then(response => response.json())
+            .then(data => {
+                trailersContent.innerHTML = data.trailers.map(trailer => `
+                <div class="trending-list list-film col-sm-3 col-md-3 col-3">
+                    <iframe class="video-index" src="${trailer.trailer_url}" title="${trailer.title}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                    <div class="movie-title name-movie-index limit-line">${trailer.title}</div>
+                    <div class="movie-release release-index text-white">${trailer.name || 'No name available'}</div>
+                </div>
+            `).join('');
+            })
+            .catch(error => console.error('Error fetching trailers:', error));
+    }
+
+    todayBtn.addEventListener('click', () => {
+        trendingSlider.style.left = "0";
+        todayBtn.classList.add('active');
+        thisWeekBtn.classList.remove('active');
+        fetchTrendingMovies('day');
+    });
+
+    thisWeekBtn.addEventListener('click', () => {
+        trendingSlider.style.left = "50%";
+        thisWeekBtn.classList.add('active');
+        todayBtn.classList.remove('active');
+        fetchTrendingMovies('week');
+    });
+
+    popularBtnTrending.addEventListener('click', () => {
+        trailersSlider.style.left = '0';
+        popularBtnTrending.classList.add('active');
+        theaterBtnTrending.classList.remove('active');
+        fetchTrailers('popular');
+    });
+
+    theaterBtnTrending.addEventListener('click', () => {
+        trailersSlider.style.left = '50%';
+        theaterBtnTrending.classList.add('active');
+        popularBtnTrending.classList.remove('active');
+        fetchTrailers('theater');
+    });
+    fetchTrendingMovies('day');
+    fetchTrailers('popular');
+
+</script>

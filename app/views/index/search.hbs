@@ -1,0 +1,164 @@
+<div class="container container-search">
+    <div class="row">
+        <div class="col-3">
+            <div class="card search-col">
+                <div class="card-header">
+                    Kết quả tìm kiếm
+                </div>
+                <div class="">
+                    <a href="/search/movie?query={{query}}" class="a-none-css">
+                        <div class="option-search-result {{#if (eq type 'movie')}}active{{/if}}">
+                            <div class="option-search-section">Movies</div>
+                            <div class="badge-search-number">{{movies.length}}</div>
+                        </div>
+                    </a>
+                    <a href="/search/tv?query={{query}}" class="a-none-css">
+                        <div class="option-search-result {{#if (eq type 'tv')}}active{{/if}}">
+                            <div class="option-search-section">TV Shows</div>
+                            <div class="badge-search-number">{{tvShows.length}}</div>
+                        </div>
+                    </a>
+                    <a href="/search/person?query={{query}}" class="a-none-css">
+                        <div class="option-search-result {{#if (eq type 'person')}}active{{/if}}">
+                            <div class="option-search-section">People</div>
+                            <div class="badge-search-number">{{people.length}}</div>
+                        </div>
+                    </a>
+                    <a href="/search/collection?query={{query}}" class="a-none-css">
+                        <div class="option-search-result {{#if (eq type 'collection')}}active{{/if}}">
+                            <div class="option-search-section">Collections</div>
+                            <div class="badge-search-number">{{collections.length}}</div>
+                        </div>
+                    </a>
+                    <a href="/search/company?query={{query}}" class="a-none-css">
+                        <div class="option-search-result {{#if (eq type 'company')}}active{{/if}}">
+                            <div class="option-search-section">Companies</div>
+                            <div class="badge-search-number">{{companies.length}}</div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-9">
+            {{#if (eq type 'movie')}}
+            {{#if movies.length}}
+            {{#each movies}}
+            <a href="/movie/{{this.id}}" class="a-none-css">
+                <div class="content-search-section bg-white shadow row">
+                    <div class="col-4 col-md-2 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.title}}"
+                            class="img-movie-result">
+                    </div>
+                    <div class="content-search col-8 col-md-10 col-xl-10">
+                        <div class="name-result">{{this.title}}</div>
+                        <div class="release-result">{{this.release_date}}</div>
+                        <div class="desc-result">{{this.overview}}</div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+            {{else}}
+            <div class="no-results">
+                Không tìm thấy kết quả nào cho Movie.
+            </div>
+            {{/if}}
+            {{/if}}
+
+            {{#if (eq type 'tv')}}
+            {{#if tvShows.length}}
+            {{#each tvShows}}
+            <a href="/tv/{{this.id}}" class="a-none-css">
+                <div class="content-search-section bg-white shadow row">
+                    <div class="col-4 col-md-2 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.name}}"
+                            class="img-movie-result">
+                    </div>
+                    <div class="content-search col-8 col-md-10 col-xl-10">
+                        <div class="name-result">{{this.name}}</div>
+                        <div class="release-result">{{this.first_air_date}}</div>
+                        <div class="desc-result">{{this.overview}}</div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+            {{else}}
+            <div class="no-results">
+                Không tìm thấy kết quả nào cho TV Shows.
+            </div>
+            {{/if}}
+            {{/if}}
+
+            {{#if (eq type 'person')}}
+            {{#if people.length}}
+            {{#each people}}
+            <a href="/person/{{this.id}}" class="a-none-css">
+                <div class="content-search-section bg-white shadow row">
+                    <div class="col-4 col-md-2 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/{{this.profile_path}}" alt="{{this.name}}"
+                            class="img-movie-result">
+                    </div>
+                    <div class="content-search col-8 col-md-10 col-xl-10">
+                        <div class="name-result">{{this.name}}</div>
+                        <div class="desc-result">{{this.known_for_department}}</div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+            {{else}}
+            <div class="no-results">
+                Không tìm thấy kết quả nào cho People.
+            </div>
+            {{/if}}
+            {{/if}}
+
+
+            {{#if (eq type 'company')}}
+            {{#if companies.length}}
+            {{#each companies}}
+            <a href="/company/{{this.id}}" class="a-none-css">
+                <div class="content-search-section bg-white shadow row">
+                    <div class="col-4 col-md-2 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/{{this.logo_path}}" alt="{{this.name}}"
+                            class="img-movie-result">
+                    </div>
+                    <div class="content-search col-8 col-md-10 col-xl-10">
+                        <div class="name-result">{{this.name}}</div>
+                        <div class="desc-result">{{this.origin_country}}</div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+            {{else}}
+            {{/if}}
+            <div class="no-results">
+                Không tìm thấy kết quả nào cho Company.
+            </div>
+            {{/if}}
+
+            {{#if (eq type 'collection')}}
+            {{#if collections.length}}
+            {{#each collections}}
+            <a href="/collection/{{this.id}}" class="a-none-css">
+                <div class="content-search-section bg-white shadow row">
+                    <div class="col-4 col-md-2 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.name}}"
+                            class="img-movie-result">
+                    </div>
+                    <div class="content-search col-8 col-md-10 col-xl-10">
+                        <div class="name-result">{{this.name}}</div>
+                        <div class="desc-result">{{this.overview}}</div>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+            {{else}}
+            <div class="no-results">
+                Không tìm thấy kết quả nào cho Collections.
+            </div>
+            {{/if}}
+            {{/if}}
+        </div>
+
+    </div>
+</div>
