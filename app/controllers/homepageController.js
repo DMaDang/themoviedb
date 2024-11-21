@@ -40,22 +40,15 @@ export const homePage = async (req, res) => {
 
 
 export const searchContent = async (req, res) => {
-    const { query } = req.query; // Lấy query từ tham số search
-    const { type } = req.params; // Lấy loại tìm kiếm (movie, tv, etc.)
+    const { query } = req.query; 
+    const { type } = req.params; 
 
-    // Danh sách các loại tìm kiếm được hỗ trợ
     const validTypes = ['movie', 'tv', 'person', 'company', 'collection'];
-
-    if (!query) {
-        return res.status(400).json({ error: 'Query is required' });
-    }
-
     if (!type || !validTypes.includes(type)) {
         return res.status(400).json({ error: 'Invalid search type' });
     }
 
     try {
-        // Tạo các request song song để lấy dữ liệu
         const promises = validTypes.map((searchType) =>
             tmdbApi.get(`/search/${searchType}`, {
                 params: {
@@ -65,13 +58,10 @@ export const searchContent = async (req, res) => {
             })
         );
 
-        // Chờ tất cả các request hoàn thành
         const results = await Promise.all(promises);
 
-        // Gán kết quả tương ứng với từng loại tìm kiếm
         const [moviesRes, tvShowsRes, peopleRes, companiesRes, collectionsRes] = results;
 
-        // Render trang với tất cả dữ liệu
         res.render('index/search', {
             query,
             movies: moviesRes.data.results || [],
@@ -79,7 +69,7 @@ export const searchContent = async (req, res) => {
             people: peopleRes.data.results || [],
             companies: companiesRes.data.results || [],
             collections: collectionsRes.data.results || [],
-            type, // Truyền type để đánh dấu mục đang active
+            type, 
         });
     } catch (error) {
         console.error('Error during search:', error);

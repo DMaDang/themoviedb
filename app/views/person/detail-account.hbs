@@ -1,0 +1,12 @@
+<div class="container mt-5">
+    <h1>Account Details</h1>
+    <div class="card">
+        <div class="card-header">Hello, {{account.username}}!</div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{account.name}}</p>
+            <p><strong>User ID:</strong> {{account.id}}</p>
+            <p><strong>Include Adult Content:</strong> {{#if account.include_adult}}Yes{{else}}No{{/if}}</p>
+        </div>
+    </div>
+    <a href="/" class="btn btn-primary mt-3">Go Back to Home</a>
+</div>

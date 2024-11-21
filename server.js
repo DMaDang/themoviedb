@@ -10,11 +10,15 @@ import MovieRoute from './app/routers/movieRoute.js';
 import UserRoute from './app/routers/userRoute.js';
 import TvRoute from './app/routers/tvRoute.js';
 import HomepageRoute from './app/routers/homepageRoute.js';
+import cookieParser from 'cookie-parser';
+import { checkSession } from './app/middleware/mdwAPI.js';
+
 
 dotenv.config();
 
 const app = express();
 app.use(express.urlencoded({ extended: true })); 
+app.use(cookieParser());
 app.use(express.json()); 
 app.use(session({
     secret: process.env.SECRET_KEY_SESSION,  
@@ -70,7 +74,7 @@ app.engine('.hbs', exphbs.engine({
 
 
 app.set('view engine', '.hbs');
-
+app.use(checkSession);
 app.use("/movie", MovieRoute);
 app.use("/person", UserRoute);
 app.use("/tv", TvRoute);

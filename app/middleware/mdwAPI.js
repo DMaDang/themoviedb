@@ -2,13 +2,22 @@ import { tmdbApi } from '../config/movieConfig.js';
 
 export const fetchGenres = async (req, res, next) => {
   try {
-    // Fetch danh sách thể loại từ TMDB
     const response = await tmdbApi.get('/genre/movie/list');
     res.locals.genres = response.data.genres;
     next();
   } catch (error) {
     console.error("Error fetching genres:", error);
-    res.locals.genres = []; // Gán giá trị mặc định nếu có lỗi
+    res.locals.genres = []; 
     next();
   }
 };
+
+
+// middleware/checkSession.js
+export const checkSession = (req, res, next) => {
+  if (req.session && req.session.account) {
+    res.locals.account = req.session.account; // Lưu thông tin tài khoản vào res.locals
+  }
+  next(); // Tiếp tục xử lý request
+};
+

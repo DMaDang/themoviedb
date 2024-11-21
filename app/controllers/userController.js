@@ -104,76 +104,92 @@ export const getPersonDetails = async (req, res) => {
   }
 };
 
-export const createRequestToken = async (req, res) => {
+export const getRequestToken = async (req, res) => {
   try {
-    const response = await tmdbApi.get("/authentication/token/new");
-    const requestToken = response.data.request_token;
+      const response = await tmdbApi.get(`/authentication/token/new`, {
+          params: { api_key: process.env.TMDB_API_KEY },
+      });
 
-    const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=http://localhost:3000/user/auth/callback`;
-    console.log(requestToken);
-    res.render("authRequest", { authUrl });
+      if (response.data.success) {
+          const requestToken = response.data.request_token;
+          const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=http://localhost:3000/person/create-session`;
+
+          res.render('person/login', { authUrl });
+      } else {
+          res.status(400).json({ message: 'Failed to get request token.' });
+      }
   } catch (error) {
-    console.error(
-      "Error:",
-      error.response ? error.response.data : error.message
-    );
-    res.status(500).json({ message: "Lỗi khi tạo request token" });
+      res.status(500).json({ message: error.message });
   }
 };
+
 
 export const createSession = async (req, res) => {
-  const requestToken = req.query.request_token;
+  const { request_token: requestToken, approved } = req.query;
 
-  if (!requestToken) {
-    return res.status(400).json({ message: "Request token không hợp lệ" });
+  if (!requestToken || approved !== 'true') {
+    return res.status(400).render('session-error', { message: "Request token is missing or approval failed." });
   }
 
   try {
-    // Gửi yêu cầu tạo session mới với request_token
-    const response = await tmdbApi.post("/authentication/session/new", {
+    // Tạo session từ request token
+    const response = await tmdbApi.post(`/authentication/session/new`, {
       request_token: requestToken,
+    }, {
+      params: { api_key: process.env.TMDB_API_KEY },
     });
 
-    console.log("Response from TMDB:", response.data); // In response data để kiểm tra
+    if (response.data.success) {
+      const sessionId = response.data.session_id;
 
-    // Kiểm tra nếu session_id có trong response
-    const sessionId = response.data.session_id;
-    if (sessionId) {
-      req.session.sessionId = sessionId;
-      console.log("Session ID:", sessionId);
-      res.render("user/sessionSuccess", { sessionId });
+      // Lưu sessionId vào session
+      req.session.tmdb_session_id = sessionId;
+
+      // Sử dụng sessionId để lấy thông tin tài khoản
+      const accountResponse = await tmdbApi.get(`/account`, {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+          session_id: sessionId,
+        },
+      });
+
+      // Lưu thông tin tài khoản vào session
+      req.session.account = accountResponse.data;
+
+      // Chuyển hướng về trang chủ sau khi đăng nhập thành công
+      return res.redirect('/');
     } else {
-      // Nếu không có session_id trong response
-      console.error("Không có session_id trong response:", response.data);
-      res.status(500).json({ message: "Không thể tạo session ID từ TMDB" });
+      return res.status(400).render('session-error', { message: "Failed to create session." });
     }
   } catch (error) {
-    // In chi tiết lỗi khi gọi API TMDB
-    console.error(
-      "Error from TMDB API:",
-      error.response ? error.response.data : error.message
-    );
-    res
-      .status(500)
-      .json({ message: "Lỗi khi tạo session ID", error: error.message });
+    return res.status(500).render('session-error', { message: error.message });
   }
 };
+  
 
-export const accountDetail = async (req, res) => {
-  const sessionId = req.session.sessionId; // Lấy sessionId từ session đã lưu
-  if (!sessionId) {
-    return res.status(400).json({ message: "Session ID không hợp lệ" });
-  }
+
+export const getAccountDetails = async (req, res) => {
+  const sessionId = req.session.tmdb_session_id;  // Lấy sessionId từ session
+
+  // if (!sessionId) {
+  //   return res.status(400).render('account-error', { message: "Session ID is required." });
+  // }
 
   try {
     const response = await tmdbApi.get(`/account`, {
-      params: { session_id: sessionId },
+      params: {
+        api_key: process.env.TMDB_API_KEY,
+        session_id: sessionId,
+      },
     });
-    res.render("user/account-detail", { account: response.data });
+
+    // Render thông tin tài khoản
+    res.render('person/detail-account', { account: response.data });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).render('account-error', { message: error.message });
   }
 };
+
 
 // Tạo API thêm vào danh sách yêu thích
 export const addFavorite = async (req, res) => {
