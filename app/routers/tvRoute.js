@@ -7,6 +7,7 @@ router.get('/top-rated', tvRoute.getTopRatedTVShows)
 router.get('/popular', tvRoute.getPopularTVShows)
 router.get('/airing-today', tvRoute.getAiringTodayTVShows)
 router.get('/on-tv', tvRoute.getOnTV)
+router.get('/:id', tvRoute.getTVDetails)
 
 
 

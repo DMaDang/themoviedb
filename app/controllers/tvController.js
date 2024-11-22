@@ -78,3 +78,37 @@ export const getOnTV = async (req, res) => {
         res.status(400).json({ err: err });
     }
 };
+
+
+export const getTVDetails = async (req, res) => {
+    const tvId = req.params.id;
+    try {
+      const tvResponse = await tmdbApi.get(`/tv/${tvId}`);
+      const videoResponse = await tmdbApi.get(`/tv/${tvId}/videos`);
+      const creditsResponse = await tmdbApi.get(`/tv/${tvId}/credits`);
+      const reviewResponse = await tmdbApi.get(`/tv/${tvId}/reviews`);
+      const contentRatingsResponse = await tmdbApi.get(`/tv/${tvId}/content_ratings`);
+  
+      const tv = tvResponse.data;
+      const videos = videoResponse.data.results;
+      const cast = creditsResponse.data.cast;
+      const crew = creditsResponse.data.crew;
+      const reviews = reviewResponse.data.results;
+  
+      // Tìm certification (dựa trên mã quốc gia VN hoặc US nếu cần)
+      const contentRatings = contentRatingsResponse.data.results;
+      const vietnamRating = contentRatings.find(item => item.iso_3166_1 === 'US');
+      const certification = vietnamRating?.rating || 'N/A';
+  
+      tv.videos = videos;
+      tv.cast = cast;
+      tv.crew = crew;
+      tv.reviews = reviews;
+      tv.certification = certification;
+  
+      res.render('movie/detail-tv', { tv });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  

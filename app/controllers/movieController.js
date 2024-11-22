@@ -91,21 +91,24 @@ export const getMovieDetails = async (req, res) => {
     const videoResponse = await tmdbApi.get(`/movie/${movieId}/videos`);
     const creditsResponse = await tmdbApi.get(`/movie/${movieId}/credits`);
     const reviewResponse = await tmdbApi.get(`/movie/${movieId}/reviews`);
+    const releaseDatesResponse = await tmdbApi.get(`/movie/${movieId}/release_dates`);
 
     const movie = movieResponse.data;
     const videos = videoResponse.data.results;
     const cast = creditsResponse.data.cast;
     const crew = creditsResponse.data.crew;
     const reviews = reviewResponse.data.results;
-    const backdrops = movieResponse.data.backdrops;
-    const posters = movieResponse.data.posters;
+
+    const releaseDates = releaseDatesResponse.data.results;
+    const vietnamRelease = releaseDates.find(item => item.iso_3166_1 === 'US');
+    const certification = vietnamRelease?.release_dates[0]?.certification || 'N/A';
 
     movie.videos = videos;
     movie.cast = cast;
     movie.crew = crew;
     movie.reviews = reviews;
-    movie.backdrops = backdrops;
-    movie.posters = posters;
+    movie.certification = certification;
+
     res.render('movie/detail-movie', { movie });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -33,24 +33,25 @@
         </ul>
       </div>
     </div>
-    <form action="/search/tv" method="get" class="">
-      <div class="search">
-        <button class="search-icon">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <div>
-          <input class="search-input" name="query" value="{{query}}" placeholder="Tìm kiếm phim" />
+    <div class="search-auth">
+      <form action="/search/tv" method="get" class="">
+        <div class="search">
+          <button class="search-icon">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <div>
+            <input class="search-input" name="query" value="{{query}}" placeholder="Tìm kiếm phim" />
+          </div>
         </div>
+      </form>
+      <div class="header-item">
+        {{#if account}}
+        <span class="header-item">Xin chào, {{account.username}}</span>
+        {{else}}
+        <a href="/person/login" class="header-item header-item-link">Đăng nhập</a>
+        {{/if}}
       </div>
-    </form>
-    <div class="header-item">
-      {{#if account}}
-      <span class="header-item">Xin chào, {{account.username}}</span>
-      {{else}}
-      <a href="/person/login" class="header-item header-item-link">Đăng nhập</a>
-      {{/if}}
     </div>
-
   </div>
 
 </nav>
@@ -74,4 +75,18 @@
       console.error("Error fetching genres:", error);
     }
   });
+</script>
+
+<script>
+  const searchInput = document.querySelector('.search-input');
+  const searchIcon = document.querySelector('.search-icon i');
+
+  searchInput.addEventListener('input', () => {
+    if (searchInput.value.trim() !== '') {
+      searchIcon.style.color = '#000'; // Màu đen khi có nội dung
+    } else {
+      searchIcon.style.color = '#848687'; // Màu xám khi không có nội dung
+    }
+  });
+
 </script>

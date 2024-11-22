@@ -1,32 +1,32 @@
 <style>
   .movie-header {
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url("https://image.tmdb.org/t/p/original{{movie.backdrop_path}}") no-repeat center center;
+    url("https://image.tmdb.org/t/p/original{{tv.backdrop_path}}") no-repeat center center;
   }
 </style>
 <div class="container-fluid movie-header">
   <div class="container">
     <div class="row">
       <div class="col-md-3">
-        <img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" alt="{{movie.title}} Poster"
+        <img src="https://image.tmdb.org/t/p/w500{{tv.poster_path}}" alt="{{tv.name}} Poster"
           class="desc-poster" />
       </div>
       <div class="col-md-9">
         <div class="desc-movie">
           <div class="desc-header">
-            <span class="desc-title">{{movie.title}}</span>
-            <span class="desc-tagline">{{movie.tagline}}</span>
-            <span class="desc-sumary">{{movie.certification}},
-              {{movie.release_date}}({{movie.original_language}})
-              {{#each movie.genres}}
+            <span class="desc-title">{{tv.name}}</span>
+            <span class="desc-tagline">{{tv.tagline}}</span>
+            <span class="desc-sumary">{{tv.certification}},
+              {{tv.first_air_date}}({{tv.original_language}})
+              {{#each tv.genres}}
               {{this.name}},
               {{/each}}
-              {{movie.runtime}} phút
+              {{tv.episode_run_time.[0]}} phút
             </span>
           </div>
           <div class="desc-score">
-            <p><strong>Điểm trung bình:</strong> {{movie.vote_average}} / 10</p>
-            <p><strong>Lượt đánh giá:</strong> {{movie.vote_count}}</p>
+            <p><strong>Điểm trung bình:</strong> {{tv.vote_average}} / 10</p>
+            <p><strong>Lượt đánh giá:</strong> {{tv.vote_count}}</p>
           </div>
           <div class="desc-interact">
             <div class="desc-interact-btn">
@@ -48,27 +48,27 @@
           </div>
           <div class="desc-movie-info">
             <span class="desc-movie-title">Thông tin phim</span>
-            <span class="desc-overview">{{movie.overview}}</span>
+            <span class="desc-overview">{{tv.overview}}</span>
 
           </div>
           <div class="desc-budget-revenue">
             <span><strong><i class="fa-solid fa-dollar-sign"></i>Ngân sách:</strong>
-              {{movie.budget}} USD
+              {{tv.budget}} USD
             </span>
             <span><strong><i class="fa-solid fa-chart-column"></i>Doanh thu:</strong>
-              {{movie.revenue}} USD
+              {{tv.revenue}} USD
             </span>
           </div>
           <div class="desc-production">
             <span class="desc-movie-title">Thông tin sản xuất</span>
             <div class="desc-country-company">
               <span><strong>Công ty sản xuất:</strong>
-                {{#each movie.production_companies}}
+                {{#each tv.production_companies}}
                 <span>{{this.name}}</span>{{#unless @last}}, {{/unless}}
                 {{/each}}
               </span>
               <span><strong>Quốc gia sản xuất:</strong>
-                {{#each movie.production_countries}}
+                {{#each tv.production_countries}}
                 <span>{{this.name}}</span>{{#unless @last}}, {{/unless}}
                 {{/each}}
             </div>
@@ -83,23 +83,23 @@
 <div class="container ">
   <div class="trailer-section">
     <div class="row cast-scroll">
-      <h3 class="title-h3" style="margin-bottom: -5px;">Trailer phim</h3>
+      <div class="col-12 ">
+        <h3 class="title-h3" style="margin-bottom: -5px;">Trailer phim</h3>
+      </div>
     </div>
+    {{#if tv.videos.length}}
     <div class="row cast-scroll">
       <div class="trailer ">
-        {{#if movie.videos.length}}
-        {{#each movie.videos}}
+        {{#each tv.videos}}
         <div class="col-md-4 col-sm-6 col-4">
           <iframe src="https://www.youtube.com/embed/{{this.key}}" allowfullscreen></iframe>
         </div>
         {{/each}}
-        {{else}}
-        <div class="col-md-4 col-sm-6 col-4">
-          <p>Hiện tại chưa có trailer của phim.</p>
-        </div>
-        {{/if}}
       </div>
+      {{else}}
+      <p>Hiện tại chưa có trailer của phim.</p>
     </div>
+    {{/if}}
   </div>
 </div>
 
@@ -114,8 +114,8 @@
     <div class="row cast-scroll">
       <div class="col-md-12">
         <div class="cast-scroll">
-          {{#if movie.cast.length}}
-          {{#each movie.cast}}
+          {{#if tv.cast.length}}
+          {{#each tv.cast}}
           <a href="/person/{{this.id}}" class="a-none-css">
             <div class="cast-item">
               <img src="https://image.tmdb.org/t/p/w500{{this.profile_path}}" alt="{{this.name}}"
@@ -139,8 +139,8 @@
       <div class="col-md-12">
         <h3>Đoàn làm phim</h3>
         <div class="cast-scroll">
-          {{#if movie.crew.length}}
-          {{#each movie.crew}}
+          {{#if tv.crew.length}}
+          {{#each tv.crew}}
           <a href="/person/{{this.id}}" class="a-none-css">
             <div class="cast-item">
               <img src="https://image.tmdb.org/t/p/w500{{this.profile_path}}" alt="{{this.name}}"
@@ -162,9 +162,9 @@
 
       <div class="col-md-12">
         <h3>Đánh giá phim</h3>
-        {{#if movie.reviews.length}}
+        {{#if tv.reviews.length}}
         <div class="reviews-scroll">
-          {{#each movie.reviews}}
+          {{#each tv.reviews}}
           <div class="review-item">
             <p><strong>{{this.author}}</strong>
               <span class="text-muted">({{this.created_at}})</span>
@@ -174,7 +174,7 @@
           {{/each}}
         </div>
         {{else}}
-        <p>Chưa có đánh giá cho phim này.</p>
+        <p>Chưa có đánh giá cho chương trình này.</p>
         {{/if}}
       </div>
     </div>

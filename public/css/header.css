@@ -13,17 +13,29 @@
 
 .header {
     display: flex;
-    width: 1216px;
-    padding-left: 80px;
+    width: 100vw;
+    padding: 0 60px;
     align-items: center;
     justify-content: space-between;
 }
 
 .logo {
     cursor: pointer;
+    margin-right: 10px;
 
 }
-
+.logo-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+}
+.search-auth{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+}
 .header-item-a {
     text-decoration: none;
     color: #555;
@@ -38,21 +50,14 @@
     width: 200px;
     display: flex;
     align-items: center;
-    justify-content: center;
     height: 40px;
     border: 1px solid #ccc;
     color: #848687;
-    margin-top: 15px;
+    /* margin-top: 17px; */
     border-radius: 8px;
 }
 
-.logo-title {
-    width: 800px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 40px;
-}
+
 
 .search-icon {
     padding-left: 8px;
@@ -60,9 +65,17 @@
     font-weight: 800;
     border: none;
     outline: none;
+    color: #848687;
     background: transparent;
 
 }
+
+.search-icon i {
+    color: #848687;
+    transition: color 0.3s ease;
+  }
+  
+
 
 .search-input {
     width: 100%;
@@ -85,6 +98,8 @@
     font-size: 20px;
     font-weight: 500;
     position: relative;
+    margin: 0 7px;
+
 }
 .tvshow-item, 
 .movie-item{
