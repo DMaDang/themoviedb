@@ -1,0 +1,78 @@
+<div class="container">
+    <div class="row">
+        <div class="watch-list-section">
+            <div class="option-tv-movie">
+                <h3 class="title-h3" style="">
+                    My Watchlist
+                </h3>
+
+                <!-- Các nút chuyển đổi giữa Movies và TV -->
+                <a href="/person/watch-list?type=movies"
+                    class="option-watchlist a-none-css movie-watchlist{{#if (eq type 'movies')}} active{{/if}}"
+                    data-type="movies">
+                    Movies
+                </a>
+                <a href="/person/watch-list?type=tv"
+                    class="option-watchlist a-none-css tv-watchlist{{#if (eq type 'tv')}} active{{/if}}" data-type="tv">
+                    TV
+                </a>
+            </div>
+
+            <div class="order-addlist">
+                <span class="">Thứ tự thêm vào danh sách</span>
+                <i class="fa-solid fa-chevron-up"></i>
+            </div>
+        </div>
+
+        <div class="col-12 watch-list" id="watchlist-container">
+            {{#if watchlistItems.length}}
+            <div class="watchlist-items">
+                {{#each watchlistItems}}
+                <div class="content-search-section bg-white shadow row">
+                    <div class="col-4 col-md-2 col-xl-2">
+                        <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.title}}"
+                            class="img-movie-result">
+                    </div>
+                    <div class="content-search col-8 col-md-10 col-xl-10">
+                        <a href="/movie/{{this.id}}" class="a-none-css">
+                            <div class="name-result">{{this.title}}</div>
+                        </a>
+                        <div class="release-result">{{this.release_date}}</div>
+                        <div class="desc-result">{{this.overview}}</div>
+                        <div class="">
+                            <div class="desc-interact">
+                                <div class="desc-interact-btn" id="addToList">
+                                    <i class="fa-solid fa-list list-icon"></i>
+                                    Add to list
+                                </div>
+                                <div class="desc-interact-btn" id="addToFavorite">
+                                    <i class="fa-solid fa-heart fav-icon"></i>
+                                    Yêu thích
+                                </div>
+                                <div class="desc-interact-btn" id="addToWatchlist">
+                                    <i class="fa-solid fa-bookmark later-icon"></i>
+                                    Xem sau
+                                </div>
+                                <div class="desc-interact-btn" id="playNow">
+                                    <i class="fa-solid fa-play play-icon"></i>
+                                    Xem ngay
+                                </div>
+                                <div class="desc-interact-btn" id="playNow">
+                                    <i class="fa-solid fa-play remove-icon"></i>
+                                    Xóa bỏ
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <div class="have-not-add">Bạn chưa thêm phim nào vào danh sách xem sau.</div>
+        {{/if}}
+    </div>
+</div>
+</div>

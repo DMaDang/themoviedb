@@ -6,13 +6,19 @@ const router = express.Router();
 
 router.get('/login', userController.getRequestToken);
 router.get('/create-session', userController.createSession);
-router.post('/favorite', userController.addFavorite);
-router.get("/detail-account", userController.getAccountDetails);
+
+router.get('/watch-list', userController.getWatchlist);
+router.post('/favorite', userController.addToFavorite);
+router.post('/add-watchlist', userController.addToWatchlist);
+router.post('/create-list', userController.createList);
+router.post('/add-list', userController.addToList);
+ 
 
 
 router.get('/popular-people', userController.getPopularPeople); 
-router.get('/:id', userController.getPersonDetails); 
+router.get('/detail/:id', userController.getPersonDetails); 
 
+router.get('/detail-account', userController.getAccountDetails);
 
 
 router.get('/logout', (req, res) => {

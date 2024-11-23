@@ -1,10 +1,11 @@
-<div class="container mt-5">
-    <h1>Account Details</h1>
+<div class="container mt-5 pt-4 pb-4">
+    <h3 class="h3-title">Account Details</h3>
     <div class="card">
         <div class="card-header">Hello, {{account.username}}!</div>
         <div class="card-body">
-            <p><strong>Name:</strong> {{account.name}}</p>
+            <p><strong>Name:</strong> {{#if account.name}} {{account.name}} {{else}} N/A {{/if}}</p>
             <p><strong>User ID:</strong> {{account.id}}</p>
+            <p><strong>National</strong> {{account.iso_3166_1}}</p>
             <p><strong>Include Adult Content:</strong> {{#if account.include_adult}}Yes{{else}}No{{/if}}</p>
         </div>
     </div>
