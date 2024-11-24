@@ -61,13 +61,16 @@
 
 .desc-interact .list-icon{
     color: #3498DB;
+    transition: color 0.1s ease-in-out;
 }
+
 .desc-interact .fav-icon{
     color: #E74C3C;
+    transition: color 0.1s ease-in-out;
 }
 .desc-interact .later-icon{
     color: #F39C12;
-
+    transition: color 0.1s ease-in-out;
 }
 .desc-interact .play-icon{
     color: #2ECC71;
@@ -79,8 +82,9 @@
 }
 .desc-interact-btn {
     margin-right: 30px;
-
 }
+
+
 
 .desc-interact-btn i {
     margin-right: 3px;
@@ -454,6 +458,7 @@
 .option-tv-movie h3 {
     font-size: 1.2rem;
     margin-top: 10px;
+    margin-left: -10px;
 }
 
 .option-watchlist {

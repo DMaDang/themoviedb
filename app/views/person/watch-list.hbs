@@ -6,7 +6,6 @@
                     My Watchlist
                 </h3>
 
-                <!-- Các nút chuyển đổi giữa Movies và TV -->
                 <a href="/person/watch-list?type=movies"
                     class="option-watchlist a-none-css movie-watchlist{{#if (eq type 'movies')}} active{{/if}}"
                     data-type="movies">
@@ -28,37 +27,57 @@
             {{#if watchlistItems.length}}
             <div class="watchlist-items">
                 {{#each watchlistItems}}
-                <div class="content-search-section bg-white shadow row">
+                <div class="content-search-section bg-white shadow">
                     <div class="col-4 col-md-2 col-xl-2">
                         <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.title}}"
                             class="img-movie-result">
                     </div>
                     <div class="content-search col-8 col-md-10 col-xl-10">
-                        <a href="/movie/{{this.id}}" class="a-none-css">
-                            <div class="name-result">{{this.title}}</div>
+                        <a href="{{#if (eq ../type 'tv')}}/tv/{{this.id}}{{else}}/movie/{{this.id}}{{/if}}"
+                            class="a-none-css">
+                            <div class="name-result">
+                                {{#if (eq ../type 'tv')}}{{this.name}}{{else}}{{this.title}}{{/if}}
+                            </div>
                         </a>
-                        <div class="release-result">{{this.release_date}}</div>
-                        <div class="desc-result">{{this.overview}}</div>
+                        <div class="release-result">
+                            {{#if (eq ../type 'tv')}}{{this.first_air_date}}{{else}}{{this.release_date}}{{/if}}
+
+                        </div>
+
+                        <div class="desc-result">
+                            {{#if this.overview}}
+                            {{this.overview}}
+                            {{else}}
+                            {{#if (eq ../type 'tv')}}
+                            Chưa có thông tin về TV Show này.
+                            {{else}}
+                            Chưa có thông tin về Movie này.
+                            {{/if}}
+                            {{/if}}
+                        </div>
                         <div class="">
-                            <div class="desc-interact">
+                            <div class="desc-interact mt-4">
                                 <div class="desc-interact-btn" id="addToList">
                                     <i class="fa-solid fa-list list-icon"></i>
                                     Add to list
                                 </div>
-                                <div class="desc-interact-btn" id="addToFavorite">
-                                    <i class="fa-solid fa-heart fav-icon"></i>
+                                <div class="desc-interact-btn" id="addToFavorite" data-media-id="{{this.id}}"
+                                    data-media-type="{{#if (eq ../type 'tv')}}tv{{else}}movie{{/if}}">
+                                    <i class="fa-solid fa-heart {{#if this.isFavorite}}fav-icon{{/if}}"></i>
                                     Yêu thích
                                 </div>
-                                <div class="desc-interact-btn" id="addToWatchlist">
-                                    <i class="fa-solid fa-bookmark later-icon"></i>
+                                <div class="desc-interact-btn" id="addToWatchlist" data-media-id="{{this.id}}"
+                                    data-media-type="{{#if (eq ../type 'tv')}}tv{{else}}movie{{/if}}">
+                                    <i class="fa-solid fa-bookmark {{#if this.isInWatchlist}}later-icon{{/if}}"></i>
                                     Xem sau
                                 </div>
                                 <div class="desc-interact-btn" id="playNow">
                                     <i class="fa-solid fa-play play-icon"></i>
                                     Xem ngay
                                 </div>
-                                <div class="desc-interact-btn" id="playNow">
-                                    <i class="fa-solid fa-play remove-icon"></i>
+                                <div class="desc-interact-btn" id="removeItem" data-media-id="{{this.id}}"
+                                    data-media-type="{{#if (eq ../type 'tv')}}tv{{else}}movie{{/if}}">
+                                    <i class="fa-solid fa-xmark remove-icon"></i>
                                     Xóa bỏ
                                 </div>
                             </div>
@@ -66,9 +85,9 @@
                     </div>
 
                 </div>
+                {{/each}}
 
             </div>
-            {{/each}}
         </div>
         {{else}}
         <div class="have-not-add">Bạn chưa thêm phim nào vào danh sách xem sau.</div>
@@ -76,3 +95,67 @@
     </div>
 </div>
 </div>
+
+<script>
+    document.querySelectorAll(".desc-interact-btn").forEach((button) => {
+        button.addEventListener("click", async (e) => {
+            const btn = e.target.closest(".desc-interact-btn");
+            const mediaId = btn.dataset.mediaId;
+            const mediaType = btn.dataset.mediaType;
+            const actionType = btn.id; // Xác định hành động: "addToFavorite" hoặc "addToWatchlist"
+
+            // Kiểm tra trạng thái của nút (đã có class "fav-icon" hay "later-icon" chưa)
+            const isFavorite = btn.querySelector("i").classList.contains("fav-icon");
+            const isInWatchlist = btn.querySelector("i").classList.contains("later-icon");
+
+            const isTogglingOn = !isFavorite && !isInWatchlist; // Xác định hành động (thêm vào hoặc xóa)
+            console.log("Button clicked:", actionType);
+
+            if (!mediaId || !mediaType) {
+                console.error("Missing mediaId or mediaType.");
+                return;
+            }
+
+            let endpoint = "";
+            let payload = {};
+
+            if (actionType === "addToFavorite") {
+                // Nếu có class "fav-icon" thì xóa khỏi yêu thích, nếu không có thì thêm vào
+                endpoint = "/person/favorite";
+                payload = { mediaId, mediaType, favorite: !isFavorite }; // Thêm hoặc xóa
+            } else if (actionType === "addToWatchlist") {
+                // Nếu có class "later-icon" thì xóa khỏi watchlist, nếu không có thì thêm vào
+                endpoint = "/person/watchlist";
+                payload = { mediaId, mediaType, watchlist: !isInWatchlist }; // Thêm hoặc xóa
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    console.log(result.message);
+
+                    // Toggle trạng thái button dựa trên kết quả
+                    if (actionType === "addToFavorite") {
+                        btn.querySelector("i").classList.toggle("fav-icon", !isFavorite);
+                    } else if (actionType === "addToWatchlist") {
+                        btn.querySelector("i").classList.toggle("later-icon", !isInWatchlist);
+                    }
+
+                    // Cập nhật class active nếu có thay đổi
+                    btn.classList.toggle("active", !isFavorite && !isInWatchlist);
+                } else {
+                    console.error("Failed to update status. Server response:", result.message);
+                }
+            } catch (error) {
+                console.error("Error sending request:", error.message);
+            }
+        });
+    });
+
+</script>

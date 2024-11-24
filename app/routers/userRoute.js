@@ -8,11 +8,13 @@ router.get('/login', userController.getRequestToken);
 router.get('/create-session', userController.createSession);
 
 router.get('/watch-list', userController.getWatchlist);
+router.get('/favorite-list', userController.getFavorite);
 router.post('/favorite', userController.addToFavorite);
 router.post('/add-watchlist', userController.addToWatchlist);
+router.post('/favorite', userController.removeFavorite);
+router.post('/watchlist', userController.removeWatchlist);
 router.post('/create-list', userController.createList);
 router.post('/add-list', userController.addToList);
- 
 
 
 router.get('/popular-people', userController.getPopularPeople); 

@@ -8,8 +8,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-3">
-        <img src="https://image.tmdb.org/t/p/w500{{tv.poster_path}}" alt="{{tv.name}} Poster"
-          class="desc-poster" />
+        <img src="https://image.tmdb.org/t/p/w500{{tv.poster_path}}" alt="{{tv.name}} Poster" class="desc-poster" />
       </div>
       <div class="col-md-9">
         <div class="desc-movie">
@@ -29,19 +28,19 @@
             <p><strong>Lượt đánh giá:</strong> {{tv.vote_count}}</p>
           </div>
           <div class="desc-interact">
-            <div class="desc-interact-btn">
+            <div class="desc-interact-btn" id="addToList">
               <i class="fa-solid fa-list"></i>
               Add to list
             </div>
-            <div class="desc-interact-btn">
+            <div class="desc-interact-btn" id="addToFavorite">
               <i class="fa-solid fa-heart"></i>
               Yêu thích
             </div>
-            <div class="desc-interact-btn">
+            <div class="desc-interact-btn" id="addToWatchlist">
               <i class="fa-solid fa-bookmark"></i>
               Xem sau
             </div>
-            <div class="desc-interact-btn">
+            <div class="desc-interact-btn" id="playNow">
               <i class="fa-solid fa-play"></i>
               Xem ngay
             </div>
@@ -181,3 +180,97 @@
   </div>
 
 </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tvId = "{{tv.id}}"; 
+    const mediaType = "tv"; 
+    const accountId = "{{account.id}}";
+    const sessionId = "{{sessionId}}"; 
+
+    console.log("tv ID:", tvId);
+    console.log("Account ID:", accountId);
+    console.log("Session ID:", sessionId);
+
+    document.getElementById('addToFavorite').addEventListener('click', async () => {
+      console.log("Clicked Add to Favorite button");
+      const requestBody = { accountId, mediaId: tvId, mediaType, favorite: true };
+      console.log("Request Body:", requestBody);
+
+      try {
+        const response = await fetch('/person/favorite', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        });
+
+        console.log("Response:", response);
+        const result = await response.json();
+        console.log("Response JSON:", result);
+
+        alert(result.message || 'Thêm vào danh sách yêu thích thành công!');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Đã xảy ra lỗi khi thêm vào danh sách yêu thích.');
+      }
+    });
+
+    document.getElementById('addToWatchlist').addEventListener('click', async () => {
+      console.log("Clicked Add to Watchlist button");
+      const requestBody = { accountId, mediaId: tvId, mediaType, watchlist: true };
+      console.log("Request Body:", requestBody);
+
+      try {
+        const response = await fetch('/person/add-watchlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        });
+
+        console.log("Response:", response);
+        const result = await response.json();
+        console.log("Response JSON:", result);
+
+        alert(result.message || 'Thêm vào danh sách xem sau thành công!');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Đã xảy ra lỗi khi thêm vào danh sách xem sau.');
+      }
+    });
+
+    document.getElementById('addToList').addEventListener('click', async () => {
+      console.log("Clicked Add to List button");
+      const listId = prompt('Nhập ID danh sách muốn thêm vào:');
+      if (!listId) {
+        console.log("No list ID provided.");
+        return alert('Vui lòng nhập ID danh sách.');
+      }
+
+      const requestBody = { listId, mediaId: tvId };
+      console.log("Request Body:", requestBody);
+
+      try {
+        const response = await fetch('/person/add-list', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        });
+
+        console.log("Response:", response);
+        const result = await response.json();
+        console.log("Response JSON:", result);
+
+        alert(result.message || 'Thêm vào danh sách thành công!');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Đã xảy ra lỗi khi thêm vào danh sách.');
+      }
+    });
+
+    document.getElementById('playNow').addEventListener('click', () => {
+      console.log("Clicked Play Now button");
+      alert('Chức năng "Xem ngay" đang được phát triển.');
+    });
+  });
+</script>

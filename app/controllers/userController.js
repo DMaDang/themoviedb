@@ -161,9 +161,6 @@ export const createSession = async (req, res) => {
 
       // Lưu thông tin tài khoản vào session
       req.session.account = accountResponse.data;
-      // console.log(req.session.account)
-      console.log(req.session.tmdb_session_id);
-      // Chuyển hướng về trang chủ sau khi đăng nhập thành công
       return res.redirect("/");
     } else {
       return res
@@ -199,10 +196,10 @@ export const getAccountDetails = async (req, res) => {
 
 export const addToFavorite = async (req, res) => {
   try {
-    console.log("Received Body:", req.body);
-
-    const { accountId, mediaId, mediaType, favorite } = req.body;
-
+    // console.log("Received Body:", req.body);
+    const accountId = req.session.account?.id;
+    const { mediaId, mediaType, favorite } = req.body;
+    
     // Kiểm tra dữ liệu đầu vào
     if (!accountId || !mediaId || !mediaType) {
       console.error("Missing required fields");
@@ -343,22 +340,39 @@ export const getWatchlist = async (req, res) => {
         message: "Session ID or Account ID is missing.",
       });
   }
-  
-  const type = req.query.type || "movies"; 
-  
+
+  const type = req.query.type || "movies"; // 'movies' hoặc 'tv'
+
   try {
     const endpoint = type === "tv" ? "watchlist/tv" : "watchlist/movies";
-
-    const response = await tmdbApi.get(`/account/${accountId}/${endpoint}`, {
+    
+    // Lấy dữ liệu watchlist
+    const watchlistResponse = await tmdbApi.get(`/account/${accountId}/${endpoint}`, {
       params: {
         api_key: process.env.TMDB_API_KEY,
         session_id: sessionId,
       },
     });
 
-    const watchlistItems = response.data.results;
+    // Lấy danh sách favorite (yêu thích)
+    const favoriteResponse = await tmdbApi.get(`/account/${accountId}/favorite/${type}`, {
+      params: {
+        api_key: process.env.TMDB_API_KEY,
+        session_id: sessionId,
+      },
+    });
 
+    // Danh sách media yêu thích
+    const favoriteIds = favoriteResponse.data.results.map(item => item.id);
 
+    // Xử lý watchlist items và gán trạng thái isFavorite và isInWatchlist
+    const watchlistItems = watchlistResponse.data.results.map((item) => ({
+      ...item,
+      isFavorite: favoriteIds.includes(item.id), // Kiểm tra nếu media này có trong danh sách yêu thích
+      isInWatchlist: true, // Mặc định là true vì chúng đã có trong watchlist
+    }));
+
+    // Render trang với dữ liệu watchlist
     res.render("person/watch-list", { 
       watchlistItems, 
       type, 
@@ -370,3 +384,132 @@ export const getWatchlist = async (req, res) => {
       .render("account-error", { message: "Unable to fetch watchlist" });
   }
 };
+
+export const getFavorite = async (req, res) => {
+  const sessionId = req.session.tmdb_session_id;
+  const accountId = req.session.account?.id;
+
+  if (!sessionId || !accountId) {
+    return res
+      .status(400)
+      .render("account-error", {
+        message: "Session ID or Account ID is missing.",
+      });
+  }
+
+  const type = req.query.type || "movies"; // 'movies' hoặc 'tv'
+
+  try {
+    const endpoint = type === "tv" ? "favorite/tv" : "favorite/movies";
+    
+    // Lấy dữ liệu favorite
+    const favoriteResponse = await tmdbApi.get(`/account/${accountId}/${endpoint}`, {
+      params: {
+        api_key: process.env.TMDB_API_KEY,
+        session_id: sessionId,
+      },
+    });
+
+    // Lấy dữ liệu watchlist để gán trạng thái isInWatchlist
+    const watchlistResponse = await tmdbApi.get(`/account/${accountId}/watchlist/${type}`, {
+      params: {
+        api_key: process.env.TMDB_API_KEY,
+        session_id: sessionId,
+      },
+    });
+
+    // Danh sách media trong watchlist
+    const watchlistIds = watchlistResponse.data.results.map(item => item.id);
+
+    // Xử lý favorite items và gán trạng thái isFavorite và isInWatchlist
+    const favoriteItems = favoriteResponse.data.results.map((item) => ({
+      ...item,
+      isFavorite: true, // Mặc định là true vì đây là danh sách favorite
+      isInWatchlist: watchlistIds.includes(item.id), // Kiểm tra nếu media này có trong watchlist
+    }));
+
+    // Render trang với dữ liệu favorite list
+    res.render("person/favorite-list", { 
+      favoriteItems, 
+      type, 
+    });
+  } catch (error) {
+    console.error("Error fetching favorite list:", error.message);
+    res
+      .status(500)
+      .render("account-error", { message: "Unable to fetch favorite list" });
+  }
+};
+
+
+export const removeFavorite = async (req, res) => {
+  const { mediaId, mediaType, favorite } = req.body;
+  const sessionId = req.session.tmdb_session_id;
+  const accountId = req.session.account?.id;
+
+  // Kiểm tra dữ liệu đầu vào
+  if (!mediaId || !mediaType || typeof favorite === "undefined") {
+    return res.status(400).json({ message: "Dữ liệu không hợp lệ." });
+  }
+
+  // Kiểm tra sessionId và accountId
+  if (!sessionId || !accountId) {
+    return res.status(400).json({ message: "Session hoặc Account không hợp lệ." });
+  }
+
+  try {
+    // Gửi yêu cầu đến TMDB API
+    const response = await tmdbApi.post(
+      `/account/${accountId}/favorite`,
+      {
+        media_type: mediaType,
+        media_id: mediaId,
+        favorite, // true hoặc false
+      },
+      {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+          session_id: sessionId,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      res.status(200).json({ message: "Favorite status updated successfully." });
+    } else {
+      res.status(response.status).json({ message: response.statusText });
+    }
+  } catch (error) {
+    console.error("Error toggling favorite status:", error.message);
+    res.status(500).json({ message: "Unable to toggle favorite status." });
+  }
+};
+
+export const removeWatchlist = async (req, res) => {
+  const { mediaId, mediaType, watchlist } = req.body;
+  const sessionId = req.session.tmdb_session_id;
+  const accountId = req.session.account?.id;
+
+  try {
+    await tmdbApi.post(
+      `/account/${accountId}/watchlist`,
+      {
+        media_type: mediaType, // "movie" hoặc "tv"
+        media_id: mediaId,
+        watchlist, // true hoặc false
+      },
+      {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+          session_id: sessionId,
+        },
+      }
+    );
+
+    res.status(200).json({ message: "Favorite status updated successfully." });
+  } catch (error) {
+    console.error("Error toggling favorite status:", error.message);
+    res.status(500).json({ message: "Unable to toggle favorite status." });
+  }
+};
+
