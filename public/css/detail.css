@@ -59,7 +59,7 @@
 }
 
 
-.desc-interact .list-icon{
+#addToList:hover i{
     color: #3498DB;
     transition: color 0.1s ease-in-out;
 }
@@ -72,7 +72,7 @@
     color: #F39C12;
     transition: color 0.1s ease-in-out;
 }
-.desc-interact .play-icon{
+#playNow:hover i{
     color: #2ECC71;
 
 }

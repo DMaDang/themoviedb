@@ -196,17 +196,15 @@ export const getAccountDetails = async (req, res) => {
 
 export const addToFavorite = async (req, res) => {
   try {
-    // console.log("Received Body:", req.body);
     const accountId = req.session.account?.id;
     const { mediaId, mediaType, favorite } = req.body;
     
     // Kiểm tra dữ liệu đầu vào
     if (!accountId || !mediaId || !mediaType) {
-      console.error("Missing required fields");
+      // console.error("Missing required fields");
       return res.status(400).json({ message: "Dữ liệu không hợp lệ." });
     }
 
-    // Gửi yêu cầu lên TMDB API để thêm phim vào danh sách yêu thích
     const response = await tmdbApi.post(
       `/account/${accountId}/favorite`,
       {
@@ -217,12 +215,11 @@ export const addToFavorite = async (req, res) => {
       {
         params: {
           api_key: process.env.TMDB_API_KEY,
-          session_id: req.session.tmdb_session_id, // Sử dụng sessionId từ session
+          session_id: req.session.tmdb_session_id,
         },
       }
     );
 
-    // Kiểm tra phản hồi từ TMDB API
     if (response.data.success) {
       return res
         .status(200)
@@ -260,7 +257,7 @@ export const addToWatchlist = async (req, res) => {
     );
 
     if (response.data.success) {
-      res.json({ message: "Added to watchlist successfully." });
+      res.json({ message: "Thêm vào danh sách xem sau thành công" });
     } else {
       res.status(400).json({ message: "Failed to add to watchlist." });
     }
@@ -341,12 +338,11 @@ export const getWatchlist = async (req, res) => {
       });
   }
 
-  const type = req.query.type || "movies"; // 'movies' hoặc 'tv'
+  const type = req.query.type || "movies"; 
 
   try {
     const endpoint = type === "tv" ? "watchlist/tv" : "watchlist/movies";
     
-    // Lấy dữ liệu watchlist
     const watchlistResponse = await tmdbApi.get(`/account/${accountId}/${endpoint}`, {
       params: {
         api_key: process.env.TMDB_API_KEY,
@@ -354,7 +350,6 @@ export const getWatchlist = async (req, res) => {
       },
     });
 
-    // Lấy danh sách favorite (yêu thích)
     const favoriteResponse = await tmdbApi.get(`/account/${accountId}/favorite/${type}`, {
       params: {
         api_key: process.env.TMDB_API_KEY,
@@ -362,17 +357,15 @@ export const getWatchlist = async (req, res) => {
       },
     });
 
-    // Danh sách media yêu thích
     const favoriteIds = favoriteResponse.data.results.map(item => item.id);
 
     // Xử lý watchlist items và gán trạng thái isFavorite và isInWatchlist
     const watchlistItems = watchlistResponse.data.results.map((item) => ({
       ...item,
-      isFavorite: favoriteIds.includes(item.id), // Kiểm tra nếu media này có trong danh sách yêu thích
-      isInWatchlist: true, // Mặc định là true vì chúng đã có trong watchlist
+      isFavorite: favoriteIds.includes(item.id), 
+      isInWatchlist: true,
     }));
 
-    // Render trang với dữ liệu watchlist
     res.render("person/watch-list", { 
       watchlistItems, 
       type, 
@@ -397,12 +390,11 @@ export const getFavorite = async (req, res) => {
       });
   }
 
-  const type = req.query.type || "movies"; // 'movies' hoặc 'tv'
+  const type = req.query.type || "movies"; 
 
   try {
     const endpoint = type === "tv" ? "favorite/tv" : "favorite/movies";
     
-    // Lấy dữ liệu favorite
     const favoriteResponse = await tmdbApi.get(`/account/${accountId}/${endpoint}`, {
       params: {
         api_key: process.env.TMDB_API_KEY,
@@ -410,7 +402,6 @@ export const getFavorite = async (req, res) => {
       },
     });
 
-    // Lấy dữ liệu watchlist để gán trạng thái isInWatchlist
     const watchlistResponse = await tmdbApi.get(`/account/${accountId}/watchlist/${type}`, {
       params: {
         api_key: process.env.TMDB_API_KEY,
@@ -418,17 +409,14 @@ export const getFavorite = async (req, res) => {
       },
     });
 
-    // Danh sách media trong watchlist
     const watchlistIds = watchlistResponse.data.results.map(item => item.id);
 
-    // Xử lý favorite items và gán trạng thái isFavorite và isInWatchlist
     const favoriteItems = favoriteResponse.data.results.map((item) => ({
       ...item,
-      isFavorite: true, // Mặc định là true vì đây là danh sách favorite
-      isInWatchlist: watchlistIds.includes(item.id), // Kiểm tra nếu media này có trong watchlist
+      isFavorite: true, 
+      isInWatchlist: watchlistIds.includes(item.id),
     }));
 
-    // Render trang với dữ liệu favorite list
     res.render("person/favorite-list", { 
       favoriteItems, 
       type, 

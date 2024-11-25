@@ -28,24 +28,47 @@
             <p><strong>Điểm trung bình:</strong> {{movie.vote_average}} / 10</p>
             <p><strong>Lượt đánh giá:</strong> {{movie.vote_count}}</p>
           </div>
+          {{#if isLoggedIn}}
           <div class="desc-interact">
             <div class="desc-interact-btn" id="addToList">
-              <i class="fa-solid fa-list"></i>
+              <i class="fa-solid fa-list list-icon"></i>
               Add to list
             </div>
-            <div class="desc-interact-btn" id="addToFavorite">
+            <div class="desc-interact-btn" id="addToFavorite" data-media-id="{{movie.id}}" data-media-type="movie">
+              <i class="fa-solid fa-heart {{#if isFavorite}}fav-icon{{/if}}"></i>
+              Yêu thích {{isFavorite}}
+            </div>
+            <div class="desc-interact-btn" id="addToWatchlist" data-media-id="{{movie.id}}" data-media-type="movie">
+              <i class="fa-solid fa-bookmark {{#if isInWatchlist}}later-icon{{/if}}"></i>
+              Xem sau {{isInWatchlist}}
+            </div>
+            <div class="desc-interact-btn" id="playNow">
+              <i class="fa-solid fa-play play-icon"></i>
+              Xem ngay
+            </div>
+          </div>
+          {{else}}
+          <div class="desc-interact">
+            <div class="desc-interact-btn" id="addToList">
+              <i class="fa-solid fa-list list-icon"></i>
+              Add to list
+            </div>
+            <div class="desc-interact-btn" id="addToFavorite" data-media-id="{{movie.id}}" data-media-type="movie">
               <i class="fa-solid fa-heart"></i>
               Yêu thích
             </div>
-            <div class="desc-interact-btn" id="addToWatchlist">
+            <div class="desc-interact-btn" id="addToWatchlist" data-media-id="{{movie.id}}" data-media-type="movie">
               <i class="fa-solid fa-bookmark"></i>
               Xem sau
             </div>
             <div class="desc-interact-btn" id="playNow">
-              <i class="fa-solid fa-play"></i>
+              <i class="fa-solid fa-play play-icon"></i>
               Xem ngay
             </div>
           </div>
+          {{/if}}
+
+
           <div class="desc-movie-info">
             <span class="desc-movie-title">Thông tin phim</span>
             <span class="desc-overview">{{movie.overview}}</span>
@@ -183,94 +206,92 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const movieId = "{{movie.id}}"; 
-    const mediaType = "movie"; 
-    const accountId = "{{account.id}}";
-    const sessionId = "{{sessionId}}"; 
+  document.addEventListener("DOMContentLoaded", () => {
+  const isLoggedIn = {{ isLoggedIn }};
 
-    console.log("Movie ID:", movieId);
-    console.log("Account ID:", accountId);
-    console.log("Session ID:", sessionId);
+  const checkLogin = () => {
+    if (!isLoggedIn) {
+      alert("Bạn cần đăng nhập để sử dụng chức năng này!");
+      return false;
+    }
+    return true;
+  };
 
-    document.getElementById('addToFavorite').addEventListener('click', async () => {
-      console.log("Clicked Add to Favorite button");
-      const requestBody = { accountId, mediaId: movieId, mediaType, favorite: true };
-      console.log("Request Body:", requestBody);
+  const handleButtonClick = async (event, actionType) => {
+    if (!checkLogin()) return; 
 
-      try {
-        const response = await fetch('/person/favorite', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
-        });
+    const btn = event.target.closest(".desc-interact-btn");
+    const mediaId = btn.dataset.mediaId;
+    const mediaType = btn.dataset.mediaType;
 
-        console.log("Response:", response);
-        const result = await response.json();
-        console.log("Response JSON:", result);
+    if (!mediaId || !mediaType) {
+      console.error("Thiếu mediaId hoặc mediaType.");
+      return;
+    }
 
-        alert(result.message || 'Thêm vào danh sách yêu thích thành công!');
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Đã xảy ra lỗi khi thêm vào danh sách yêu thích.');
+    let endpoint = "";
+    let payload = {};
+    let successMessage = "";
+    let isAlreadyInList = false;
+
+    const isFavorite = btn.querySelector("i").classList.contains("fav-icon");
+    const isInWatchlist = btn.querySelector("i").classList.contains("later-icon");
+
+    if (actionType === "addToFavorite") {
+      endpoint = "/person/favorite";
+      payload = { mediaId, mediaType, favorite: !isFavorite };
+      successMessage = isFavorite
+        ? "Đã xóa khỏi danh sách yêu thích!"
+        : "Thêm vào danh sách yêu thích thành công!";
+      isAlreadyInList = isFavorite;
+    } else if (actionType === "addToWatchlist") {
+      endpoint = "/person/watchlist";
+      payload = { mediaId, mediaType, watchlist: !isInWatchlist };
+      successMessage = isInWatchlist
+        ? "Đã xóa khỏi danh sách xem sau!"
+        : "Thêm vào danh sách xem sau thành công!";
+      isAlreadyInList = isInWatchlist;
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log(result.message);
+
+        if (actionType === "addToFavorite") {
+          btn.querySelector("i").classList.toggle("fav-icon", !isAlreadyInList);
+        } else if (actionType === "addToWatchlist") {
+          btn.querySelector("i").classList.toggle("later-icon", !isAlreadyInList);
+        }
+
+        btn.classList.toggle("active", !isAlreadyInList);
+        alert(successMessage);
+      } else {
+        console.error("Không thể cập nhật trạng thái. Phản hồi từ server:", result.message);
+        alert("Không thể cập nhật danh sách.");
       }
-    });
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu:", error.message);
+      alert("Đã xảy ra lỗi.");
+    }
+  };
 
-    document.getElementById('addToWatchlist').addEventListener('click', async () => {
-      console.log("Clicked Add to Watchlist button");
-      const requestBody = { accountId, mediaId: movieId, mediaType, watchlist: true };
-      console.log("Request Body:", requestBody);
-
-      try {
-        const response = await fetch('/person/add-watchlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
-        });
-
-        console.log("Response:", response);
-        const result = await response.json();
-        console.log("Response JSON:", result);
-
-        alert(result.message || 'Thêm vào danh sách xem sau thành công!');
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Đã xảy ra lỗi khi thêm vào danh sách xem sau.');
-      }
-    });
-
-    document.getElementById('addToList').addEventListener('click', async () => {
-      console.log("Clicked Add to List button");
-      const listId = prompt('Nhập ID danh sách muốn thêm vào:');
-      if (!listId) {
-        console.log("No list ID provided.");
-        return alert('Vui lòng nhập ID danh sách.');
-      }
-
-      const requestBody = { listId, mediaId: movieId };
-      console.log("Request Body:", requestBody);
-
-      try {
-        const response = await fetch('/person/add-list', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
-        });
-
-        console.log("Response:", response);
-        const result = await response.json();
-        console.log("Response JSON:", result);
-
-        alert(result.message || 'Thêm vào danh sách thành công!');
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Đã xảy ra lỗi khi thêm vào danh sách.');
-      }
-    });
-
-    document.getElementById('playNow').addEventListener('click', () => {
-      console.log("Clicked Play Now button");
-      alert('Chức năng "Xem ngay" đang được phát triển.');
+  document.querySelectorAll(".desc-interact-btn").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const actionType = e.target.closest(".desc-interact-btn").id; 
+      handleButtonClick(e, actionType);
     });
   });
+
+  document.getElementById("addToList").addEventListener("click", () => {
+    alert('Chức năng "Thêm vào danh sách" đang được phát triển.');
+  });
+});
+
 </script>
