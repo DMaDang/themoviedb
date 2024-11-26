@@ -1,10 +1,13 @@
 <nav class="header-movie">
   <div class="header">
     <div class="logo-title">
+      <div class="header-item header-item-menu">
+        <i class="fa-solid fa-bars"></i>
+      </div>
       <a href="/" class="logo">
         <img
           src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
-          alt="The Movie Database (TMDB)" width="154" height="20">
+          alt="The Movie Database (TMDB)">
       </a>
       <div class="header-item header-item-movie">
         <div href="" class="header-item header-item-link">Phim</div>
@@ -15,6 +18,7 @@
           <a href="/movie/top-rated" class="movie-item-a">Đánh giá cao</a>
         </div>
       </div>
+
       <div class="header-item header-item-tvshow">
         <div class="header-item header-item-link">TV Show</div>
         <div class="bg-light shadow tvshow-item">
@@ -46,13 +50,78 @@
       </form>
       <div class="header-item">
         {{#if account}}
-        <span class="header-item">Xin chào, {{account.username}}</span>
+        <span class="header-item header-item-login">
+            <i class="fa-solid fa-user header-item user-icon"></i>
+            Xin chào, {{account.username}}!
+          <div class="bg-light login-item">
+            <a href="/person/detail-account" class="movie-item-a">Chi tiết tài khoản</a>
+            <a href="/person/favorite-list" class="movie-item-a">Danh sách yêu thích</a>
+            <a href="/person/watch-list" class="movie-item-a">Danh sách xem sau</a>
+            <a href="/person/logout" class="movie-item-a">Đăng xuất</a>
+          </div>
+        </span>
         {{else}}
-        <a href="/person/login" class="header-item header-item-link">Đăng nhập</a>
+        <div class="header-item header-item-login">
+          <i class="fa-solid fa-user header-item header-item-link"></i>
+          <div class="bg-light login-item">
+            <a href="/person/login" class="movie-item-a">Đăng nhập</a>
+          </div>
+        </div>
         {{/if}}
+        {{!-- <a href=" class=" header-item header-item-link">Đăng nhập</a> --}}
+
       </div>
     </div>
   </div>
+  <div class="menu-modal">
+    <div class="menu-content">
+      <div class="menu-header">
+        <span class="close-menu">&times;</span>
+      </div>
+      <ul style="padding: 0;">
+        <li class="header-link-section">
+          <span class="link-section">
+            <span>Phim</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </span>
+          <div class="content-sub-menu">
+            <a href="/movie/popular-movie" class="movie-item-a">Phổ biến</a>
+            <a href="/movie/now-playing" class="movie-item-a">Đang phát sóng</a>
+            <a href="/movie/upcoming-movie" class="movie-item-a">Sắp lên sóng</a>
+            <a href="/movie/top-rated" class="movie-item-a">Đánh giá cao</a>
+          </div>
+        </li>
+        <li class="header-link-section">
+          <span class="link-section">
+            <span>TV Show</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </span>
+          <div class="content-sub-menu">
+            <a href="/tv/popular" class="movie-item-a">Phổ biến</a>
+            <a href="/tv/airing-today" class="movie-item-a">Phát sóng hôm nay</a>
+            <a href="/tv/on-tv" class="movie-item-a">Chương trình đang phát sóng</a>
+            <a href="/tv/top-rated" class="movie-item-a">Đánh giá cao</a>
+          </div>
+        </li>
+        <li class="header-link-section">
+          <a href="/person/popular-people" class="link-section">Người nổi tiếng</a>
+        </li>
+        <li class="header-link-section">
+          <span class="link-section">
+            <span>Thể loại</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </span>
+          <div class="content-sub-menu">
+            <span>a</span>
+            <span>b</span>
+            <span>b</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="overlay"></div>
+
 
 </nav>
 
@@ -83,10 +152,67 @@
 
   searchInput.addEventListener('input', () => {
     if (searchInput.value.trim() !== '') {
-      searchIcon.style.color = '#000'; // Màu đen khi có nội dung
+      searchIcon.style.color = '#000';
     } else {
-      searchIcon.style.color = '#848687'; // Màu xám khi không có nội dung
+      searchIcon.style.color = '#848687';
     }
+  });
+
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuButton = document.querySelector(".header-item-menu");
+    const modal = document.querySelector(".menu-modal");
+    const overlay = document.querySelector(".overlay");
+    const closeButton = document.querySelector(".close-menu");
+
+    menuButton.addEventListener("click", () => {
+      modal.classList.add("open");
+      overlay.classList.add("show");
+    });
+
+    const closeMenu = () => {
+      modal.classList.remove("open");
+      overlay.classList.remove("show");
+    };
+
+    closeButton.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+  });
+
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const spans = document.querySelectorAll(".menu-content ul > li > span");
+
+    spans.forEach((span) => {
+      span.addEventListener("click", () => {
+        const subMenu = span.nextElementSibling;
+        if (subMenu && subMenu.classList.contains("content-sub-menu")) {
+          const isActive = subMenu.classList.contains("active");
+          if (isActive) {
+            subMenu.classList.remove("active");
+            const icon = span.querySelector("i");
+            icon.classList.remove("fa-chevron-down");
+            icon.classList.add("fa-chevron-right");
+          } else {
+            subMenu.classList.add("active");
+            const icon = span.querySelector("i");
+            icon.classList.remove("fa-chevron-right");
+            icon.classList.add("fa-chevron-down");
+          }
+        }
+      });
+    });
   });
 
 </script>

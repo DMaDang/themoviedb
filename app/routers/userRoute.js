@@ -24,8 +24,13 @@ router.get('/detail-account', userController.getAccountDetails);
 
 
 router.get('/logout', (req, res) => {
-    res.clearSession('tmdb_session_id');
-    res.redirect('/');
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send("Error clearing session");
+        }
+        res.clearCookie('connect.sid'); 
+        res.redirect('/'); 
+    });
 });
 
 export default router;

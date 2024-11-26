@@ -256,6 +256,10 @@
     }
     .section-movie{
         padding: 0 20px;
+        width: 80vw;
+    }
+    .header-container-film{
+        margin-bottom: 20px;
     }
 }
 

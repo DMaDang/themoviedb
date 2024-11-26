@@ -59,27 +59,31 @@
 }
 
 
-#addToList:hover i{
+#addToList:hover i {
     color: #3498DB;
     transition: color 0.1s ease-in-out;
 }
 
-.desc-interact .fav-icon{
+.desc-interact .fav-icon {
     color: #E74C3C;
     transition: color 0.1s ease-in-out;
 }
-.desc-interact .later-icon{
+
+.desc-interact .later-icon {
     color: #F39C12;
     transition: color 0.1s ease-in-out;
 }
-#playNow:hover i{
+
+#playNow:hover i {
     color: #2ECC71;
 
 }
-.desc-interact .remove-icon{
+
+.desc-interact .remove-icon {
     color: #95A5A6;
 
 }
+
 .desc-interact-btn {
     margin-right: 30px;
 }
@@ -496,4 +500,20 @@
 .have-not-add {
     font-style: italic;
     opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .desc-movie {
+        font-size: calc(1em * 0.75);
+    }
+
+    .desc-movie * {
+        font-size: inherit;
+    }
+    .desc-interact{
+        margin: 0;
+    }
+    .desc-country-company span{
+        font-size: calc(1em);
+    }
 }

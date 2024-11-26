@@ -29,7 +29,7 @@ app.use(session({
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, "public")));
-app.set('views', path.join(__dirname, 'app/views')); 
+app.set('views', path.join(__dirname, 'app/views'));   
 
 app.engine('.hbs', exphbs.engine({ 
   extname: '.hbs', 

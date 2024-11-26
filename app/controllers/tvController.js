@@ -125,7 +125,7 @@ export const getTVDetails = async (req, res) => {
       {
         params: {
           api_key: process.env.TMDB_API_KEY,
-          session_id: sessionId,
+          session_id: sessionId, 
         },
       }
     );

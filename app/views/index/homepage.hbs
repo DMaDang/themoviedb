@@ -13,7 +13,7 @@
 
 <div class="container section-movie cast-scroll">
     <div class="row">
-        <div class="header-container-film col-12">
+        <div class="header-container-film col-12 pb-2">
             <div class="trending-header-title">Trending</div>
             <div class="today-thisweek">
                 <div class="toggle-wrapper">
@@ -72,9 +72,15 @@
             <div class="content-container-film">
                 {{#each popularMovies}}
                 <div class="trending-list list-film col-sm-1 col-md-1 col-1">
-                    <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.title}}"
-                        class="poster-index">
-                    <div class="movie-title name-movie-index limit-line">{{this.title}}</div>
+                    <a href="/movie/{{this.id}}" class="a-none-css">
+                        <div>
+                            <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.title}}"
+                                class="poster-index">
+                        </div>
+                    </a>
+                    <a href="/movie/{{this.id}}" class="a-none-css">
+                        <div class="movie-title name-movie-index limit-line">{{this.title}}</div>
+                    </a>
                     <div class="movie-release release-index">Release Date: {{this.release_date}}</div>
                 </div>
                 {{/each}}
@@ -82,7 +88,6 @@
         </div>
     </div>
 </div>
-
 
 
 <script>
@@ -101,8 +106,14 @@
             .then(data => {
                 trendingContent.innerHTML = data.movies.map(movie => `
                 <div class="trending-list list-film col-sm-1 col-md-1 col-1">
+                <a href="/movie/${movie.id}" class="a-none-css">
+                 <div>
                     <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.title}" class="poster-index">
+                    </div>
+                </a>
+                <a href="/movie/${movie.id}" class="a-none-css">
                     <div class="movie-title name-movie-index limit-line">${movie.title}</div>
+                </a>
                     <div class="movie-release release-index">Release Date: ${movie.release_date}</div>
                 </div>
             `).join('');
@@ -115,7 +126,7 @@
             .then(response => response.json())
             .then(data => {
                 trailersContent.innerHTML = data.trailers.map(trailer => `
-                <div class="trending-list list-film col-sm-3 col-md-3 col-3">
+                <div class="trending-list list-film col-sm-6 col-md-3 col-6">
                     <iframe class="video-index" src="${trailer.trailer_url}" title="${trailer.title}" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
                     </iframe>
