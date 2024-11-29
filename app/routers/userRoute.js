@@ -24,12 +24,13 @@ router.get('/detail-account', userController.getAccountDetails);
 
 
 router.get('/logout', (req, res) => {
+    const redirectUrl = req.headers.referer || '/'; 
     req.session.destroy((err) => {
         if (err) {
             return res.status(500).send("Error clearing session");
         }
         res.clearCookie('connect.sid'); 
-        res.redirect('/'); 
+        res.redirect(redirectUrl); 
     });
 });
 

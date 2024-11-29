@@ -68,7 +68,10 @@ app.engine('.hbs', exphbs.engine({
               range.push(i);
           }
           return range;
-      }
+      },
+      json: function(context) {
+        return JSON.stringify(context);
+      }    
   }
 }));
 

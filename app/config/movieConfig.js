@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const apiKey = 'a312a76fa3a48f167614d0dca3a49886';
+const apiKey = 'e9e9d8da18ae29fc430845952232787c';
 const language = 'vi-VN';
 
 export const tmdbApi = axios.create({

@@ -3,6 +3,47 @@
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url("https://image.tmdb.org/t/p/original{{tv.backdrop_path}}") no-repeat center center;
   }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+    width: 80%;
+    max-width: 700px;
+    background-color: transparent;
+    text-align: center;
+  }
+
+
+  .close-btn {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #videoFrame {
+    width: 100%;
+    height: 400px;
+  }
 </style>
 <div class="container-fluid movie-header">
   <div class="container">
@@ -24,7 +65,7 @@
             </span>
           </div>
           <div class="desc-score">
-            <p><strong>Điểm trung bình:</strong> {{tv.vote_average}} / 10</p>
+            <p><strong>Điểm trung bình:</strong> {{tv.vote_average}}/10</p>
             <p><strong>Lượt đánh giá:</strong> {{tv.vote_count}}</p>
           </div>
           {{#if isLoggedIn}}
@@ -35,11 +76,11 @@
             </div>
             <div class="desc-interact-btn" id="addToFavorite" data-media-id="{{tv.id}}" data-media-type="tv">
               <i class="fa-solid fa-heart {{#if isFavorite}}fav-icon{{/if}}"></i>
-              Yêu thích 
+              Yêu thích
             </div>
             <div class="desc-interact-btn" id="addToWatchlist" data-media-id="{{tv.id}}" data-media-type="tv">
               <i class="fa-solid fa-bookmark {{#if isInWatchlist}}later-icon{{/if}}"></i>
-              Xem sau 
+              Xem sau
             </div>
             <div class="desc-interact-btn" id="playNow">
               <i class="fa-solid fa-play play-icon"></i>
@@ -99,7 +140,12 @@
     </div>
   </div>
 </div>
-
+<div id="videoModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+  </div>
+</div>
 <div class="container ">
   <div class="trailer-section">
     <div class="row cast-scroll">
@@ -117,7 +163,7 @@
         {{/each}}
       </div>
       {{else}}
-      <p>Hiện tại chưa có trailer của phim.</p>
+      <p>Hiện tại chưa có trailer của chương trình truyền hình.</p>
     </div>
     {{/if}}
   </div>
@@ -201,10 +247,49 @@
 
 </div>
 
+<script>
+  const tv = {{{ json tv }}};
+  console.log(tv);
 
+  document.addEventListener("DOMContentLoaded", () => {
+    const playNowButton = document.getElementById("playNow");
+    const videoModal = document.getElementById("videoModal");
+    const videoFrame = document.getElementById("videoFrame");
+    const closeBtn = document.querySelector(".close-btn");
+
+    playNowButton.addEventListener("click", () => {
+      if (tv.videos && tv.videos.length > 0) {
+        const firstVideo = tv.videos.find(
+          (video) => video.type === "Trailer" && video.site === "YouTube"
+        );
+
+        if (firstVideo) {
+          videoFrame.src = `https://www.youtube.com/embed/${firstVideo.key}`;
+          videoModal.style.display = "block";
+        } else {
+          alert("Hiện tại chưa có trailer của chương trình truyền hình.");
+        }
+      } else {
+        alert("Hiện tại chưa có trailer của chương trình truyền hình.");
+      }
+    });
+
+    closeBtn.addEventListener("click", () => {
+      videoModal.style.display = "none";
+      videoFrame.src = ""; 
+    });
+
+    window.addEventListener("click", (event) => {
+      if (event.target === videoModal) {
+        videoModal.style.display = "none";
+        videoFrame.src = "";
+      }
+    });
+  });
+</script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-  const isLoggedIn = {{ isLoggedIn }};
+    const isLoggedIn = {{ isLoggedIn }};
 
   const checkLogin = () => {
     if (!isLoggedIn) {
@@ -215,16 +300,13 @@
   };
 
   const handleButtonClick = async (event, actionType) => {
-    if (!checkLogin()) return; 
+    if (["addToFavorite", "addToWatchlist", "addToList"].includes(actionType) && !checkLogin()) {
+      return;
+    }
 
     const btn = event.target.closest(".desc-interact-btn");
     const mediaId = btn.dataset.mediaId;
     const mediaType = btn.dataset.mediaType;
-
-    if (!mediaId || !mediaType) {
-      console.error("Thiếu mediaId hoặc mediaType.");
-      return;
-    }
 
     let endpoint = "";
     let payload = {};
@@ -275,20 +357,19 @@
       }
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu:", error.message);
-      alert("Đã xảy ra lỗi.");
     }
   };
 
   document.querySelectorAll(".desc-interact-btn").forEach((button) => {
     button.addEventListener("click", (e) => {
-      const actionType = e.target.closest(".desc-interact-btn").id; 
-      handleButtonClick(e, actionType);
+      const actionType = e.target.closest(".desc-interact-btn").id;
+
+      if (actionType === "addToList") {
+        alert('Chức năng "Tạo danh sách" đang được phát triển.');
+      } else {
+        handleButtonClick(e, actionType);
+      }
     });
   });
-
-  document.getElementById("addToList").addEventListener("click", () => {
-    alert('Chức năng "Thêm vào danh sách" đang được phát triển.');
   });
-});
-
 </script>

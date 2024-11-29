@@ -14,14 +14,15 @@
           <div class="detail-section">
             <span class="detail-search">Sắp xếp theo</span>
             <select id="search-by">
-              <option class="option-search" value="">Độ phổ biến giảm dần</option>
-              <option class="option-search" value="">Độ phổ biến tăng dần</option>
-              <option class="option-search" value="">Đánh giá giảm dần</option>
-              <option class="option-search" value="">Đánh giá tăng dần</option>
-              <option class="option-search" value="">Ngày ra mắt giảm dần</option>
-              <option class="option-search" value="">Ngày ra mắt tăng dần</option>
-              <option class="option-search" value="">Tiêu đề (A-Z)</option>
-              <option class="option-search" value="">Tiêu đề (Z-A)</option>
+              <option class="option-search" value="popularity.desc">Độ phổ biến giảm dần</option>
+              <option class="option-search" value="popularity.asc">Độ phổ biến tăng dần</option>
+              <option class="option-search" value="vote_average.desc">Đánh giá giảm dần</option>
+              <option class="option-search" value="vote_average.asc">Đánh giá tăng dần</option>
+              <option class="option-search" value="release_date.desc">Ngày ra mắt giảm dần</option>
+              <option class="option-search" value="release_date.asc">Ngày ra mắt tăng dần</option>
+              <option class="option-search" value="original_title.asc">Tiêu đề (A-Z)</option>
+              <option class="option-search" value="original_title.desc">Tiêu đề (Z-A)</option>
+
             </select>
           </div>
         </div>
@@ -49,12 +50,12 @@
           <div class="separate"></div>
           <div class="detail-section">
             <span class="detail-search">Ngày phát hành</span>
-            <form>
-              <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="searchAllReleases" checked />
-                <label class="form-check-label" for="searchAllReleases">Tìm kiếm các bộ phim?</label>
-              </div>
-              <div class="mt-1">
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="searchAllReleases" checked />
+              <label class="form-check-label" for="searchAllReleases">Tìm kiếm các bộ phim?</label>
+            </div>
+            <div class="mt-1">
+              <form>
                 <div class="">
                   <label class="from-to" for="dateFrom" class="">From</label>
                   <input type="date" class="form-control" id="dateFrom" />
@@ -63,7 +64,7 @@
                   <label class="from-to" for="dateTo" class="">To</label>
                   <input type="date" class="form-control" id="dateTo" value="2025-05-15" />
                 </div>
-              </div>
+            </div>
             </form>
           </div>
         </div>
@@ -75,7 +76,7 @@
         <div class="row movie-list">
           {{#each movies}}
           <a href="/movie/{{this.id}}" class="col-md-3 a-none-css">
-            <div class="card card-movie">
+            <div class="card card-movie ">
               <div class="card-img-top">
                 <img src="https://image.tmdb.org/t/p/w500/{{this.poster_path}}" alt="{{this.original_title}}"
                   class="poster" />
@@ -99,57 +100,96 @@
     </div>
   </div>
 </div>
+
 <script>
-  let currentPage = 1;
-  const apiEndpoint = "{{apiLink}}";
-  const apiData = "{{apiData}}";
-  const apiId = "{{apiId}}";
-  document.querySelector('.btn-loadmore').addEventListener('click', async () => {
-    currentPage++;
-    try {
-      const response = await fetch(`/movie/${apiEndpoint}?page=${currentPage}`, {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      });
+  document.querySelector('.btn-search').addEventListener('click', async () => {
+  const sortBy = document.getElementById('search-by').value || 'popularity.desc';
+  const status = document.querySelector('input[name="movie"]:checked')?.value || 'all_movies';
+  const releaseFrom = document.getElementById('dateFrom').value || '';
+  const releaseTo = document.getElementById('dateTo').value || '';
 
-      const data = await response.json();
-      console.log(data);
+  const url = `/filter?sortBy=${encodeURIComponent(sortBy)}&status=${encodeURIComponent(status)}&releaseFrom=${encodeURIComponent(releaseFrom)}&releaseTo=${encodeURIComponent(releaseTo)}`;
 
-      if (data[apiData] && data[apiData].length) {
-        const moviesContainer = document.querySelector('.movie-list');
-        data[apiData].forEach(movie => {
-          const movieHTML = `
-                    <a href="/movie/${movie.id}" class="col-md-3 a-none-css">
-                        <div class="card card-movie">
-                            <div class="card-img-top">
-                                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.original_title}" class="poster">
-                            </div>
-                            <div class="card-body">
-                                <div class="card-title movie-title limit-line" title="${movie.original_title}">
-                                    ${movie.original_title}
-                                </div>
-                                <div class="card-text movie-release">
-                                    ${movie.release_date} 
-                                </div>
-                            </div>
-                        </div>
-                    </a>`;
-          moviesContainer.insertAdjacentHTML('beforeend', movieHTML);
-        });
+  try {
+    const response = await fetch(url, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    });
 
-        const loadMoreButton = document.querySelector('.btn-loadmore');
-        loadMoreButton.parentNode.appendChild(loadMoreButton);
-      } else {
-        document.querySelector('.btn-loadmore').style.display = 'none';
-      }
-    } catch (error) {
-      console.error('Lỗi khi tải thêm phim:', error);
+    const data = await response.json();
+    const movieList = document.querySelector('.movie-list');
+
+    if (data.results && data.results.length) {
+      movieList.innerHTML = data.results
+        .map(
+          (movie) => `
+          <a href="/movie/${movie.id}" class="col-md-3 a-none-css">
+            <div class="card card-movie">
+              <div class="card-img-top">
+                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.original_title}" />
+              </div>
+              <div class="card-body">
+                <div class="card-title" title="${movie.original_title}">
+                  ${movie.original_title}
+                </div>
+                <div class="card-text">
+                  ${movie.release_date || 'Không có ngày phát hành'}
+                </div>
+              </div>
+            </div>
+          </a>`
+        )
+        .join('');
+    } else {
+      movieList.innerHTML = '<p>Không tìm thấy phim.</p>';
     }
-  });
+  } catch (error) {
+    console.error('Lỗi khi tải phim:', error);
+  }
+});
+
+document.querySelector('.btn-loadmore').addEventListener('click', async () => {
+  let currentPage = 1;
+  const url = `/filter?page=${++currentPage}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    });
+
+    const data = await response.json();
+    const movieList = document.querySelector('.movie-list');
+
+    if (data.results && data.results.length) {
+      const newMovies = data.results
+        .map(
+          (movie) => `
+          <a href="/movie/${movie.id}" class="col-md-3 a-none-css">
+            <div class="card card-movie">
+              <div class="card-img-top">
+                <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.original_title}" />
+              </div>
+              <div class="card-body">
+                <div class="card-title" title="${movie.original_title}">
+                  ${movie.original_title}
+                </div>
+                <div class="card-text">
+                  ${movie.release_date || 'Không có ngày phát hành'}
+                </div>
+              </div>
+            </div>
+          </a>`
+        )
+        .join('');
+      movieList.insertAdjacentHTML('beforeend', newMovies);
+    } else {
+      document.querySelector('.btn-loadmore').style.display = 'none';
+    }
+  } catch (error) {
+    console.error('Lỗi khi tải thêm phim:', error);
+  }
+});
+
 </script>
-
-
 <script>
   document.querySelectorAll('.search-section').forEach(section => {
     section.addEventListener('click', () => {
@@ -176,7 +216,6 @@
       }
     });
   });
-
-
-
 </script>
+
+

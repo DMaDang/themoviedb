@@ -92,7 +92,6 @@ export const getMovieDetails = async (req, res) => {
   const accountId = req.session.account?.id;
 
   try {
-    // Lấy thông tin chi tiết phim
     const movieResponse = await tmdbApi.get(`/movie/${movieId}`);
     const videoResponse = await tmdbApi.get(`/movie/${movieId}/videos`);
     const creditsResponse = await tmdbApi.get(`/movie/${movieId}/credits`);
@@ -201,3 +200,5 @@ export const getMovieGenres = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+

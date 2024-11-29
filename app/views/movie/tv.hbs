@@ -149,3 +149,32 @@
   });
 
 </script>
+
+
+<script>
+  document.querySelectorAll('.search-section').forEach(section => {
+    section.addEventListener('click', () => {
+      const movieInfo = section.closest('.movie-info');
+      const detailSections = movieInfo.querySelectorAll('.detail-section');
+      const separates = movieInfo.querySelectorAll('.separate');
+
+      detailSections.forEach(detailSection => {
+        detailSection.classList.toggle('hidden');
+        detailSection.classList.toggle('show');
+      });
+      separates.forEach(separate => {
+        separate.classList.toggle('hidden');
+        separate.classList.toggle('show');
+      });
+
+      const chevronIcon = section.querySelector('.icon-chevron');
+      if (detailSections[0].classList.contains('hidden')) {
+        chevronIcon.classList.add('fa-chevron-down');
+        chevronIcon.classList.remove('fa-chevron-right');
+      } else {
+        chevronIcon.classList.add('fa-chevron-right');
+        chevronIcon.classList.remove('fa-chevron-down');
+      }
+    });
+  });
+</script>

@@ -1,14 +1,19 @@
-/* Popular movie */
+/* ----------------------------------------tv,movies--------------------------------------------- */
+.movie-list {
+    gap: 20px 0; 
+}
+
+.card-movie {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    height: 100%;
+}
 
 .card-img-top .poster {
     border-radius: 0 ;
-}
-.card-movie {
-    border-radius: 4px;
-    overflow: hidden;
-    height: 460px;
-    margin-bottom: 15px;
-    cursor: pointer;
 }
 
 .movie-title {

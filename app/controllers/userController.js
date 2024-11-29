@@ -106,6 +106,8 @@ export const getPersonDetails = async (req, res) => {
 };
 
 export const getRequestToken = async (req, res) => {
+  const redirectUrl = req.query.redirectUrl || req.headers.referer || "/"; 
+  req.session.redirectUrl = redirectUrl;
   try {
     const response = await tmdbApi.get(`/authentication/token/new`, {
       params: { api_key: process.env.TMDB_API_KEY },
@@ -114,7 +116,7 @@ export const getRequestToken = async (req, res) => {
     if (response.data.success) {
       const requestToken = response.data.request_token;
       const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=http://localhost:3000/person/create-session`;
-
+      
       res.render("person/login", { authUrl });
     } else {
       res.status(400).json({ message: "Failed to get request token." });
@@ -134,7 +136,6 @@ export const createSession = async (req, res) => {
   }
 
   try {
-    // Tạo session từ request token
     const response = await tmdbApi.post(
       `/authentication/session/new`,
       {
@@ -148,10 +149,8 @@ export const createSession = async (req, res) => {
     if (response.data.success) {
       const sessionId = response.data.session_id;
 
-      // Lưu sessionId vào session
       req.session.tmdb_session_id = sessionId;
 
-      // Sử dụng sessionId để lấy thông tin tài khoản
       const accountResponse = await tmdbApi.get(`/account`, {
         params: {
           api_key: process.env.TMDB_API_KEY,
@@ -159,9 +158,10 @@ export const createSession = async (req, res) => {
         },
       });
 
-      // Lưu thông tin tài khoản vào session
       req.session.account = accountResponse.data;
-      return res.redirect("/");
+      const redirectUrl = req.session.redirectUrl || "/";
+      delete req.session.redirectUrl;
+      return res.redirect(redirectUrl);
     } else {
       return res
         .status(400)

@@ -49,7 +49,9 @@
 .desc-score {
     display: flex;
 }
-
+.desc-score p{
+    margin-right: 15px;
+}
 .desc-interact {
     display: flex;
     margin-bottom: 10px;
