@@ -482,9 +482,9 @@ export const removeWatchlist = async (req, res) => {
     await tmdbApi.post(
       `/account/${accountId}/watchlist`,
       {
-        media_type: mediaType, // "movie" hoặc "tv"
+        media_type: mediaType, 
         media_id: mediaId,
-        watchlist, // true hoặc false
+        watchlist, 
       },
       {
         params: {

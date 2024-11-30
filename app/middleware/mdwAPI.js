@@ -16,8 +16,10 @@ export const fetchGenres = async (req, res, next) => {
 // middleware/checkSession.js
 export const checkSession = (req, res, next) => {
   if (req.session && req.session.account) {
-    res.locals.account = req.session.account; // Lưu thông tin tài khoản vào res.locals
+    res.locals.account = req.session.account; 
+    next(); 
+  } else {
+    res.redirect('/please-login'); 
   }
-  next(); // Tiếp tục xử lý request
 };
 

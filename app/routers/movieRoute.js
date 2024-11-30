@@ -13,6 +13,7 @@ router.get("/:id", movieController.getMovieDetails);
 router.get("/trailer/:id", movieController.getMovieTrailer);
 router.get("/movie", movieController.searchMovies);
 router.get('/movie-genres/genres', movieController.getMovieGenres);
+router.get('/genre/:id', movieController.getGenrePage);
 
 
 export default router;

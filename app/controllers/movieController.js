@@ -202,3 +202,45 @@ export const getMovieGenres = async (req, res) => {
 };
 
 
+let genreCache = [];
+
+const fetchGenres = async () => {
+  if (genreCache.length === 0) {
+    const response = await tmdbApi.get('/genre/movie/list');
+    genreCache = response.data.genres;
+  }
+  return genreCache;
+};
+export const getGenrePage = async (req, res) => {
+  const genreId = req.params.id;
+  const sortBy = req.query.sort_by || 'popularity.desc';
+
+  try {
+    const genres = await fetchGenres();
+    const genre = genres.find((g) => g.id == genreId);
+
+    if (!genre) {
+      return res.status(404).send('Thể loại không tồn tại');
+    }
+
+    const response = await tmdbApi.get('/discover/movie', {
+      params: {
+        with_genres: genreId,
+        sort_by: sortBy,
+        page: req.query.page || 1,
+      },
+    });
+
+    const movies = response.data.results;
+
+    res.render('movie/movies', {
+      title: `Thể loại: ${genre.name}`,
+      movies,
+      genreId,
+      genreName: genre.name,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Lỗi khi tải phim theo thể loại');
+  }
+};

@@ -134,85 +134,94 @@ export const getTrailers = async (req, res) => {
 };
 
 export const filterMoviesOrTVShows = async (req, res) => {
-    const {
-      sortBy = "popularity.desc", 
-      status = "all_movies",
-      releaseFrom,
-      releaseTo,
-      type = "movie",
-      page = 1,
-    } = req.query;
-  
-    const sessionId = req.session?.tmdb_session_id;
-    const accountId = req.session?.account?.id;
-  
-    try {
-      const isValidDate = (date) => !isNaN(new Date(date).getTime());
-  
-      const params = {
-        sort_by: sortBy,
-        "release_date.gte": isValidDate(releaseFrom) ? releaseFrom : undefined,
-        "release_date.lte": isValidDate(releaseTo) ? releaseTo : undefined,
-        page,
-      };
-  
-      const response = await tmdbApi.get(`/discover/${type}`, { params });
-      let results = response.data.results;
-  
-      if ((status === "unwatched_movies" || status === "watched_movies") && sessionId && accountId) {
-        const watchedMovies = await tmdbApi.get(
-          `/account/${accountId}/rated/${type}s`,
-          {
-            params: {
-              api_key: process.env.TMDB_API_KEY,
-              session_id: sessionId,
-            },
-          }
-        );
-        const watchedIds = watchedMovies.data.results.map((item) => item.id);
-  
-        if (status === "unwatched_movies") {
-          results = results.filter((movie) => !watchedIds.includes(movie.id));
-        } else if (status === "watched_movies") {
-          results = results.filter((movie) => watchedIds.includes(movie.id));
+  const {
+    sortBy = "popularity.desc",
+    status = "all_movies",
+    releaseFrom,
+    releaseTo,
+    type = "movie",
+    page = 1,
+  } = req.query;
+
+  const sessionId = req.session?.tmdb_session_id;
+  const accountId = req.session?.account?.id;
+
+  try {
+    const isValidDate = (date) => !isNaN(new Date(date).getTime());
+
+    const params = {
+      sort_by: sortBy,
+      "release_date.gte": isValidDate(releaseFrom) ? releaseFrom : undefined,
+      "release_date.lte": isValidDate(releaseTo) ? releaseTo : undefined,
+      page,
+    };
+
+    const response = await tmdbApi.get(`/discover/${type}`, { params });
+    let results = response.data.results;
+
+    if (
+      (status === "unwatched_movies" || status === "watched_movies") &&
+      sessionId &&
+      accountId
+    ) {
+      const watchedMovies = await tmdbApi.get(
+        `/account/${accountId}/rated/${type}s`,
+        {
+          params: {
+            api_key: process.env.TMDB_API_KEY,
+            session_id: sessionId,
+          },
         }
+      );
+      const watchedIds = watchedMovies.data.results.map((item) => item.id);
+
+      if (status === "unwatched_movies") {
+        results = results.filter((movie) => !watchedIds.includes(movie.id));
+      } else if (status === "watched_movies") {
+        results = results.filter((movie) => watchedIds.includes(movie.id));
       }
-  
-      const titlesMap = {
-        "popularity.desc": "Phổ biến nhất",
-        "popularity.asc": "Ít phổ biến",
-        "vote_average.desc": "Được đánh giá cao nhất",
-        "vote_average.asc": "Được đánh giá thấp nhất",
-        "release_date.desc": "Ngày phát hành gần nhất",
-        "release_date.asc": "Ngày phát hành xa nhất",
-        "original_title.asc": "Tiêu đề (A-Z)",
-        "original_title.desc": "Tiêu đề (Z-A)",
-      };
-  
-      const title = titlesMap[sortBy] || "Danh sách phim";
-  
-      if (req.xhr || req.headers.accept.indexOf("application/json") > -1) {
-        return res.json({
-          results,
-          page: response.data.page,
-          totalPages: response.data.total_pages,
-        });
-      } else {
-        res.render("movie/movies", {
-          title,
-          movies: results,
-          sortBy,
-          releaseFrom,
-          releaseTo,
-          status,
-          type,
-          page: response.data.page,
-          totalPages: response.data.total_pages,
-        });
-      }
-    } catch (error) {
-      console.error("Error filtering movies/TV shows:", error.response?.data || error.message);
-      res.status(500).json({ message: "Lỗi khi tải dữ liệu." });
     }
-  };
-  
+
+    const titlesMap = {
+      "popularity.desc": "Phổ biến nhất",
+      "popularity.asc": "Ít phổ biến",
+      "vote_average.desc": "Được đánh giá cao nhất",
+      "vote_average.asc": "Được đánh giá thấp nhất",
+      "release_date.desc": "Ngày phát hành gần nhất",
+      "release_date.asc": "Ngày phát hành xa nhất",
+      "original_title.asc": "Tiêu đề (A-Z)",
+      "original_title.desc": "Tiêu đề (Z-A)",
+    };
+
+    const title = titlesMap[sortBy] || "Danh sách phim";
+
+    if (req.xhr || req.headers.accept.indexOf("application/json") > -1) {
+      return res.json({
+        results,
+        page: response.data.page,
+        totalPages: response.data.total_pages,
+      });
+    } else {
+      res.render("movie/movies", {
+        title,
+        movies: results,
+        sortBy,
+        releaseFrom,
+        releaseTo,
+        status,
+        type,
+        page: response.data.page,
+        totalPages: response.data.total_pages,
+      });
+    }
+  } catch (error) {
+    console.error(
+      "Error filtering movies/TV shows:",
+      error.response?.data || error.message
+    );
+    res.status(500).json({ message: "Lỗi khi tải dữ liệu." });
+  }
+};
+export const pleaseLogin = async (req, res) => {
+  res.render("person/please-login");
+};

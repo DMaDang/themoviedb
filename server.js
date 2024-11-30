@@ -11,7 +11,6 @@ import UserRoute from './app/routers/userRoute.js';
 import TvRoute from './app/routers/tvRoute.js';
 import HomepageRoute from './app/routers/homepageRoute.js';
 import cookieParser from 'cookie-parser';
-import { checkSession } from './app/middleware/mdwAPI.js';
 
 
 dotenv.config();
@@ -77,7 +76,15 @@ app.engine('.hbs', exphbs.engine({
 
 
 app.set('view engine', '.hbs');
-app.use(checkSession);
+app.use((req, res, next) => {
+    if (req.session && req.session.account) {
+      res.locals.account = req.session.account;
+    } else {
+      res.locals.account = null;
+    }
+    next();
+  });
+  
 app.use("/movie", MovieRoute);
 app.use("/person", UserRoute);
 app.use("/tv", TvRoute);

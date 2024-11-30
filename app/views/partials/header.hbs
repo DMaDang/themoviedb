@@ -51,8 +51,8 @@
       <div class="header-item">
         {{#if account}}
         <span class="header-item header-item-login">
-            <i class="fa-solid fa-user header-item user-icon"></i>
-            Xin chào, {{account.username}}!
+          <i class="fa-solid fa-user header-item user-icon"></i>
+          Xin chào, {{account.username}}!
           <div class="bg-light login-item">
             <a href="/person/detail-account" class="movie-item-a">Chi tiết tài khoản</a>
             <a href="/person/favorite-list" class="movie-item-a">Danh sách yêu thích</a>
@@ -68,7 +68,6 @@
           </div>
         </div>
         {{/if}}
-        {{!-- <a href=" class=" header-item header-item-link">Đăng nhập</a> --}}
 
       </div>
     </div>
@@ -104,46 +103,52 @@
           </div>
         </li>
         <li class="header-link-section">
-          <a href="/person/popular-people" class="link-section">Người nổi tiếng</a>
-        </li>
-        <li class="header-link-section">
           <span class="link-section">
             <span>Thể loại</span>
             <i class="fa-solid fa-chevron-right"></i>
           </span>
-          <div class="content-sub-menu">
-            <span>a</span>
-            <span>b</span>
-            <span>b</span>
+          <div class="genre content-sub-menu">
+            <div class="" id="genre-list-2">
+            </div>
           </div>
+        </li>
+        <li class="header-link-section">
+          <a href="/person/popular-people" class="link-section">Người nổi tiếng</a>
         </li>
       </ul>
     </div>
   </div>
   <div class="overlay"></div>
-
-
 </nav>
-
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
-    try {
-      const response = await fetch('/movie/movie-genres/genres');
-      const genres = await response.json();
-      console.log("Genres:", genres);
+  try {
+    const response = await fetch('/movie/movie-genres/genres');
+    const genres = await response.json();
+    console.log("Genres:", genres);
 
-      const genreList = document.getElementById('genre-list');
+    const genreList1 = document.getElementById('genre-list');
+    genres.forEach(genre => {
+      const listItem = document.createElement('a');
+      listItem.classList.add('header-item-a');
+      listItem.textContent = genre.name;
+      listItem.href = `/movie/genre/${genre.id}`;
+      genreList1.appendChild(listItem);
+    });
 
-      genres.forEach(genre => {
-        const listItem = document.createElement('a');
-        listItem.classList.add('header-item-a');
-        listItem.textContent = genre.name;
-        genreList.appendChild(listItem);
-      });
-    } catch (error) {
-      console.error("Error fetching genres:", error);
-    }
-  });
+    const genreList2 = document.getElementById('genre-list-2');
+    genres.forEach(genre => {
+      const listItem = document.createElement('a');
+      listItem.classList.add('movie-item-a');
+      listItem.textContent = genre.name;
+      listItem.href = `/movie/genre/${genre.id}`;
+      genreList2.appendChild(listItem);
+    });
+  } catch (error) {
+    console.error("Error fetching genres:", error);
+  }
+});
+
 </script>
 
 <script>
