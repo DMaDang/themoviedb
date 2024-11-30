@@ -95,5 +95,6 @@ const PORT = process.env.PORT ;
 app.listen(PORT, () => {
     console.log(`running on port ${PORT}`);
 })
+console.log("Session Secret Key:", process.env.SECRET_KEY_SESSION);
 
 

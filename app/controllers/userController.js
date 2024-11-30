@@ -107,6 +107,7 @@ export const getPersonDetails = async (req, res) => {
 
 export const getRequestToken = async (req, res) => {
   const redirectUrl = req.query.redirectUrl || req.headers.referer || "/"; 
+  const host = process.env.VERCEL_URL || req.headers.host;  
   req.session.redirectUrl = redirectUrl;
   try {
     const response = await tmdbApi.get(`/authentication/token/new`, {
@@ -115,8 +116,7 @@ export const getRequestToken = async (req, res) => {
 
     if (response.data.success) {
       const requestToken = response.data.request_token;
-      const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=http://localhost:3000/person/create-session`;
-      
+      const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=https://${host}/person/create-session`;
       res.render("person/login", { authUrl });
     } else {
       res.status(400).json({ message: "Failed to get request token." });
